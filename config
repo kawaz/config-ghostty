@@ -1,0 +1,5 @@
+command = /opt/homebrew/bin/bash
+auto-update-channel = stable
+theme = GitHub Dark
+font-family = HackGen Console NF
+keybind = shift+enter=text:\x1b\r
