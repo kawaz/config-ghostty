@@ -1,0 +1,3 @@
+# Foreground color for the window.
+# Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
+foreground = #ffffff

@@ -1,0 +1,5 @@
+# If true, new windows and tabs will inherit the font size of the previously
+# focused window. If no window was previously focused, the default font size
+# will be used. If this is false, the default font size specified in the
+# configuration `font-size` will be used.
+window-inherit-font-size = true

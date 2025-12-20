@@ -1,0 +1,12 @@
+# When this is true, the default configuration file paths will be loaded.
+# The default configuration file paths are currently only the XDG
+# config path ($XDG_CONFIG_HOME/ghostty/config).
+# 
+# If this is false, the default configuration paths will not be loaded.
+# This is targeted directly at using Ghostty from the CLI in a way
+# that minimizes external effects.
+# 
+# This is a CLI-only configuration. Setting this in a configuration file
+# will have no effect. It is not an error, but it will not do anything.
+# This configuration can only be set via CLI arguments.
+config-default-files = true

@@ -1,0 +1,6 @@
+jump_to_prompt:
+  Jump the viewport forward or back by the given number of prompts.
+  
+  Requires shell integration.
+  
+  Positive values scroll downwards, and negative values scroll upwards.

@@ -1,0 +1,5 @@
+decrease_font_size:
+  Decrease the font size by the specified amount in points (pt).
+  
+  For example, `decrease_font_size:1.5` will decrease the font size
+  by 1.5 points.

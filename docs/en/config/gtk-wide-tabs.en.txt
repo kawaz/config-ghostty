@@ -1,0 +1,5 @@
+# If `true` (default), then the Ghostty GTK tabs will be "wide." Wide tabs
+# are the new typical Gnome style where tabs fill their available space.
+# If you set this to `false` then tabs will only take up space they need,
+# which is the old style.
+gtk-wide-tabs = true

@@ -1,0 +1,12 @@
+# The material to use for the frame of the macOS app icon.
+# 
+# Valid values:
+# 
+#  * `aluminum` - A brushed aluminum frame. This is the default.
+#  * `beige` - A classic 90's computer beige frame.
+#  * `plastic` - A glossy, dark plastic frame.
+#  * `chrome` - A shiny chrome frame.
+# 
+# Note: This configuration is required when `macos-icon` is set to
+# `custom-style`.
+macos-icon-frame = aluminum

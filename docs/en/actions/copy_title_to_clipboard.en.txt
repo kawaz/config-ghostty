@@ -1,0 +1,3 @@
+copy_title_to_clipboard:
+  Copy the terminal title to the clipboard. If the terminal title is not
+  set or is empty this has no effect.

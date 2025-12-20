@@ -1,0 +1,28 @@
+# The initial window size. This size is in terminal grid cells by default.
+# Both values must be set to take effect. If only one value is set, it is
+# ignored.
+# 
+# We don't currently support specifying a size in pixels but a future change
+# can enable that. If this isn't specified, the app runtime will determine
+# some default size.
+# 
+# Note that the window manager may put limits on the size or override the
+# size. For example, a tiling window manager may force the window to be a
+# certain size to fit within the grid. There is nothing Ghostty will do about
+# this, but it will make an effort.
+# 
+# Sizes larger than the screen size will be clamped to the screen size.
+# This can be used to create a maximized-by-default window size.
+# 
+# This will not affect new tabs, splits, or other nested terminal elements.
+# This only affects the initial window size of any new window. Changing this
+# value will not affect the size of the window after it has been created. This
+# is only used for the initial size.
+# 
+# BUG: On Linux with GTK, the calculated window size will not properly take
+# into account window decorations. As a result, the grid dimensions will not
+# exactly match this configuration. If window decorations are disabled (see
+# `window-decoration`), then this will work as expected.
+# 
+# Windows smaller than 10 wide by 4 high are not allowed.
+window-height = 0

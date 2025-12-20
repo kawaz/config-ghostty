@@ -1,0 +1,10 @@
+# The text that will be displayed in the subtitle of the window. Valid values:
+# 
+#   * `false` - Disable the subtitle.
+#   * `working-directory` - Set the subtitle to the working directory of the
+#      surface.
+# 
+# This feature is only supported on GTK.
+# 
+# Available since: 1.1.0
+window-subtitle = false

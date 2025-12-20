@@ -1,0 +1,3 @@
+# If `true` (default), applications running in the terminal can show desktop
+# notifications using certain escape sequences such as OSC 9 or OSC 777.
+desktop-notifications = true

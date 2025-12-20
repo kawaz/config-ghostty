@@ -1,0 +1,11 @@
+# The color space to use when interpreting terminal colors. "Terminal colors"
+# refers to colors specified in your configuration and colors produced by
+# direct-color SGR sequences.
+# 
+# Valid values:
+# 
+#   * `srgb` - Interpret colors in the sRGB color space. This is the default.
+#   * `display-p3` - Interpret colors in the Display P3 color space.
+# 
+# This setting is currently only supported on macOS.
+window-colorspace = srgb

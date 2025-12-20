@@ -1,0 +1,7 @@
+# This controls the instance name field of the `WM_CLASS` X11 property when
+# running under X11. It has no effect otherwise.
+# 
+# The default is `ghostty`.
+# 
+# This only affects GTK builds.
+x11-instance-name = 

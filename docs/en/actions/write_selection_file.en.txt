@@ -1,0 +1,7 @@
+write_selection_file:
+  Write the currently selected text into a temporary file with the
+  specified action.
+  
+  See `write_scrollback_file` for possible actions.
+  
+  Does nothing when no text is selected.

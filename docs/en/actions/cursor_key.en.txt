@@ -1,0 +1,3 @@
+cursor_key:
+  Send data to the pty depending on whether cursor key mode is enabled
+  (`application`) or disabled (`normal`).
