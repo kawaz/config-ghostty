@@ -1,0 +1,5 @@
+# スプリット分割線の色。設定されない場合、デフォルト値が選択されます。
+# hex形式（`#RRGGBB` または `RRGGBB`）またはX11の名前付き色として指定します。
+#
+# Available since: 1.1.0
+split-divider-color =

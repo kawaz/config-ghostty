@@ -1,0 +1,20 @@
+# アプリケーションクラス値を変更するための設定。
+#
+# X11で実行している場合は`WM_CLASS` X11プロパティのクラスフィールド、
+# Waylandで実行している場合はWaylandアプリケーションID、
+# およびGhosttyがDBusに接続するために使用するバス名を制御します。
+#
+# `gtk-single-instance=true`で実行している場合、
+# 呼び出し間でこの値を変更するとGhosttyの新しい独立したインスタンスが作成されることに注意してください。
+# その設定オプションの詳細を参照してください。
+#
+# この値を変更すると、`.desktop`ファイルからGhosttyを起動したり、
+# DBusアクティベーション経由で起動したり、systemdユーザーサービスで起動することが破損する可能性があります。
+# システムが起動時にGhosttyがデフォルトの`class`を使用してDBusに接続することを期待しているためです。
+#
+# クラス名は[GTKドキュメント](https://docs.gtk.org/gio/type_func.Application.id_is_valid.html)で定義されている要件に従う必要があります。
+#
+# デフォルトは`com.mitchellh.ghostty`です。
+#
+# これはGTKビルドのみに影響します。
+class =

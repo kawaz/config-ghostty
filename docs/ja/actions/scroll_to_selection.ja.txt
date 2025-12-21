@@ -1,0 +1,2 @@
+scroll_to_selection:
+  選択されたテキストまでスクロールする。

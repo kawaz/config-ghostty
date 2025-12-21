@@ -1,0 +1,27 @@
+# すべてのサーフェス（タブ、分割、ウィンドウ）を専用のLinux cgroup (制御グループ) に配置します。
+#
+# これにより、リソース管理をサーフェスごとの粒度で行うことができます。
+# たとえば、シェルプログラムがメモリを大量に使用している場合、
+# Ghostty全体のプロセスではなく、そのシェルのみがoomモニターに
+# よって終了されます。同様に、シェルプログラムがCPUを大量に
+# 使用している場合、そのサーフェスのみがCPUスロットルされます。
+#
+# これにより起動時間が遅くなります（約100ミリ秒程度）。
+# そのため、デフォルト値は「single-instance」です。
+# single-instanceモードでは、Ghosttyのインスタンスは1つだけ実行され
+# （gtk-single-instanceを参照）、起動時間は1回限りのコストです。
+# さらに、single-instanceモードのGhosttyは多数のウィンドウ、タブなどを
+# 持つ可能性が高いため、cgroupの分離は大きなメリットがあります。
+#
+# この機能にはsystemdが必要です。systemdが利用できない場合、cgroupの
+# 初期化に失敗します。デフォルトでは、これはGhosttyの動作を妨げません
+# （linux-cgroup-hard-failを参照）。
+#
+# 有効な値は以下の通りです：
+#
+#   * `never` - cgroupsを決して使用しません。
+#   * `always` - 常にcgroupsを使用します。
+#   * `single-instance` - Ghosttyのインスタンスがsingle-instanceアプリケーション
+#     として起動された場合にのみcgroupsを有効にします
+#     （gtk-single-instanceを参照）。
+linux-cgroup = never

@@ -1,0 +1,7 @@
+# これは `TERM` 環境変数を設定するために使用されます。
+# HACK: vimが キープロトコルを有効にするためにこれを `xterm` プレフィックス付きで設定しています
+# (具体的には `modifyOtherKeys` を有効にします)、他の機能もあります。
+# vimでこれを変更するオプションが存在します: `:set
+# keyprotocol=ghostty:kitty` ですが、実装のバグにより正しく動作しません。
+# https://github.com/vim/vim/pull/13211 がこれを修正します。
+term = xterm-ghostty

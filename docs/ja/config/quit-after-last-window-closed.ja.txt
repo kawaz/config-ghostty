@@ -1,0 +1,10 @@
+# 最後のウィンドウを閉じた後に終了するかどうか。
+#
+# これはmacOSではデフォルトで `false` です。これはmacOSアプリケーション
+# の標準的な動作のためです。Linuxではデフォルトで `true` です。これは
+# 一般的に期待される動作のためです。
+#
+# Linuxでは、この設定が `true` の場合、Ghosttyは最後のウィンドウが閉じられた後、
+# 設定可能な時間が経過するまで終了を遅延させることができます。
+# `quit-after-last-window-closed-delay` のドキュメントを参照してください。
+quit-after-last-window-closed = false

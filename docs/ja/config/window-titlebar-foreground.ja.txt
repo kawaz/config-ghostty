@@ -1,0 +1,6 @@
+# ウィンドウのタイトルバーの前景色。これは window-theme が ghostty
+# に設定されている場合のみ有効になります。現在のところ GTK アプリ
+# ランタイムでのみサポートされています。
+#
+# 16進数形式（`#RRGGBB` または `RRGGBB`）またはX11カラー名で指定します。
+window-titlebar-foreground =

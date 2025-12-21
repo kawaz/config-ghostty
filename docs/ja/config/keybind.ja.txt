@@ -1,0 +1,311 @@
+# キーバインディング。形式は `trigger=action` です。重複するトリガーは
+# 以前に設定された値を上書きします。アクションのリストはドキュメント内で
+# 確認するか、`ghostty +list-actions` コマンドを使用して利用可能です。
+#
+# トリガー: `+` で区切られたキーと修飾子のリスト。例: `ctrl+a`、
+# `ctrl+shift+b`、`up`。
+#
+# キーが単一のUnicodeコードポイントの場合、トリガーはそのコードポイントを
+# 生成するすべてのプレスに一致します。これはキーボードレイアウトの影響を
+# 受けます。たとえば、`a` はUSレイアウトのQWERTYキーボードの `a` キーに
+# 一致しますが、AZERTYキーボードでは `q` キーに一致します。
+# （物理的配置はUS標準を想定）
+#
+# Unicodeコードポイントの場合、修飾子のセットと修飾されていないコードポイント
+# を比較することで一致判定が行われます。修飾されていないコードポイントは
+# 他のソフトウェアでは「シフトなしの文字」と呼ばれることがありますが、
+# シフトだけでなくすべての修飾子が考慮されます。たとえば、`ctrl+a` は
+# `a` に一致しますが、`ctrl+shift+a` には一致しません（USキーボードでは
+# `ctrl+shift+a` は `A` です）。
+#
+# さらに、コードポイント一致は大文字と小文字を区別せず、修飾されていない
+# コードポイントは常に比較のために小文字に統一されます。その結果、
+# 設定された `ctrl+A` は `ctrl+a` が押された時に一致します。
+# キーボードレイアウトによっては、一部のキーの組み合わせが不可能になる
+# ことに注意してください。たとえば、`ctrl+_` はUSキーボードでは不可能です。
+# なぜなら `_` は `shift+-` で、`ctrl+shift+-` は `ctrl+_` と等しくないからです
+# （修飾子が一致しません！）。不可能なキーの組み合わせについての詳細は、
+# Qt開発者によって書かれたこの優れたソースで確認できます:
+# https://doc.qt.io/qt-6/qkeysequence.html#keyboard-layout-issues
+#
+# 物理的なキーコードは [W3C仕様](https://www.w3.org/TR/uievents-code/) で
+# 指定されたキーコードを使用して指定できます。たとえば、`KeyA` はキーボード
+# レイアウトに関係なく、USキーボード上の物理的な `a` キーに一致します。
+# これらは大文字と小文字を区別します。
+#
+# 美的理由から、w3cコードはスネークケースもサポートしています。
+# たとえば、`key_a` は `KeyA` と等価です。唯一の例外はファンクション
+# キーで、たとえば `F1` は `f1` です（アンダースコアなし）。これは
+# 内部コードがスネークケースを使用しているという結果ですが、意図的に
+# サポートおよびテストされているため、安全に使用できます。これにより、
+# すべて小文字のバインディングが可能になり、より美的に喜ばしいと思われます。
+#
+# `insert`、`up`、`f5` などのファンクションキーも、前述のW3C仕様で
+# 指定されたキーを使用して指定されます。
+#
+# 物理キーは常にUnicodeコードポイントより高い優先度で一致するため、
+# `a` と `KeyA` の両方を指定した場合、設定順序に関係なく物理キーが
+# 常に使用されます。
+#
+# 有効な修飾子は `shift`、`ctrl`（別名: `control`）、`alt`（別名: `opt`、
+# `option`）、および `super`（別名: `cmd`、`command`）です。修飾子またはその
+# 別名を使用できます。キーバインディングをデバッグする場合、出力では常に
+# 別名でない修飾子が使用されます。
+#
+# 注: キーボードの fn キーまたは「グローブ」キーは修飾子としてサポートされません。
+# これはGhosttyが使用するオペレーティングシステムとGUIツールキットの制限です。
+#
+# トリガーの追加の注意:
+#
+#   * 修飾子は繰り返せません。`ctrl+ctrl+a` は無効です。
+#
+#   * 修飾子とキーは任意の順序で指定できます。`shift+a+ctrl` は*奇妙*ですが、
+#     有効です。
+#
+#   * 単一のキー入力のみが許可されます。`ctrl+a+b` は無効です。
+#
+# `>` で区切られた複数のトリガーを指定して、アクションをアクティブにするための
+# トリガーシーケンスを必須にすることもできます。たとえば、
+# `ctrl+a>n=new_window` はユーザーが `ctrl+a` に続いて `n` を別に押した場合のみ
+# `new_window` アクションをトリガーします。他のソフトウェアでは、これは
+# リーダーキー、キーコード、キーテーブルなどと呼ばれることがあります。
+# シーケンスの部分の数にはハードコーディングされた制限はありません。
+#
+# 警告: シーケンスを `ghostty` へのCLI引数として定義する場合、ほとんどの
+# シェルで `>` は特殊文字であるため、キーバインディングをクォートする必要が
+# あります。例: ghostty --keybind='ctrl+a>n=new_window'
+#
+# トリガーシーケンスには特別な処理があります:
+#
+#   * Ghosttyはシーケンスの次のキーを無制限に待機します。タイムアウトを
+#     指定する方法はありません。プレフィックスキーの出力を強制する唯一の
+#     方法は、そのキーを出力するために別のキーバインディングを割り当てる
+#     （例: `ctrl+a>ctrl+a=text:foo`）か、バインドされていないキーを
+#     押してプログラムに両方のキーを送信することです。
+#
+#   * シーケンスのプレフィックスが以前にバインドされている場合、シーケンスは
+#     前のバインディングを上書きします。たとえば、`ctrl+a` が `new_window` に
+#     バインドされていて `ctrl+a>n` が `new_tab` にバインドされている場合、
+#     `ctrl+a` を押すと何も起こりません。
+#
+#   * 上記に加えて、以前にバインドされたシーケンスプレフィックスが新しい
+#     非シーケンスバインディングで使用される場合、以前にバインドされた
+#     シーケンス全体がアンバインドされます。たとえば、`ctrl+a>n` と
+#     `ctrl+a>t` をバインドし、その後 `ctrl+a` を直接バインドする場合、
+#     `ctrl+a>n` と `ctrl+a>t` の両方がアンバインドされます。
+#
+#   * トリガーシーケンスは `global:` または `all:` プレフィックス付きの
+#     トリガーには許可されません。これは将来削除できる制限です。
+#
+# アクションはトリガーが満たされた場合に実行するアクションです。形式は
+# `action` または `action:param` です。後者の形式はアクションがパラメータを
+# 必要とする場合にのみ有効です。
+#
+#   * `ignore` - 何もしない、キー入力を無視します。これは特定の入力を
+#     何の効果もないようにブラックホール化するために使用できます。
+#
+#   * `unbind` - バインディングを削除します。これは前のアクションが削除され、
+#     キーがプリント可能な場合は子コマンドに送信されることを意味します。
+#     Unbindは `physical:` プレフィックス付きトリガーを含む一致するトリガーを
+#     削除します。プレフィックスを指定する必要はありません。
+#
+#   * `csi:text` - CSIシーケンスを送信します。例: `csi:A` はカーソル上を送信します。
+#
+#   * `esc:text` - エスケープシーケンスを送信します。例: `esc:d` は右側の
+#     単語の終端まで削除します。
+#
+#   * `text:text` - 文字列を送信します。Zigの文字列リテラル構文を使用します。
+#     例: `text:\x15` はCtrl-Uを送信します。
+#
+#   * その他のすべてのアクションはドキュメント内で確認するか、
+#     `ghostty +list-actions` コマンドを使用して見つけられます。
+#
+# アクションに関する注意:
+#
+#   * パラメータは `:` の後からそのまま取得されます。ダブルクォートまたは
+#     他のメカニズムは含まれ、解析されません。スペースを含む文字列値を
+#     送信する場合は、トリガー/アクション全体をダブルクォートで囲みます。
+#     例: `--keybind="up=csi:A B"`
+#
+# キーバインディングに指定できる特別な値が他にもあります:
+#
+#   * `keybind=clear` はすべての設定されたキーバインディングをクリアします。
+#     警告: これはデフォルトのキーバインディングを含む、この時点までの
+#     すべてのキーバインディングを削除します。
+#
+# キーバインディングトリガーには、キーバインディングの動作を変更するための
+# 特別な値でプレフィックスを付けることができます。これらは:
+#
+#  * `all:`
+#
+#    キーバインディングをすべてのターミナルサーフェースに適用します。
+#    デフォルトでは、キーバインディングはフォーカスされたターミナル
+#    サーフェースにのみ適用されます。これがtrueの場合、キーバインディング
+#    はすべてのターミナルサーフェースに送信されます。これはサーフェース固有の
+#    アクションにのみ適用されます。`quit` などのすでにグローバルなアクションの場合、
+#    このプレフィックスは効果がありません。
+#
+#    利用可能バージョン: 1.0.0
+#
+#  * `global:`
+#
+#    キーバインディングをグローバルにします。デフォルトでは、キーバインディングは
+#    Ghostty内でのみ機能し、適切な条件下（アプリケーションがフォーカスされている、
+#    時々ターミナルがフォーカスされているなど）で機能します。Ghosttyがフォーカス
+#    されていない場合でも、システム全体でキーバインディングが機能するようにする場合は
+#    （例: Ghosttyがフォーカスされていない場合でも）、このプレフィックスを指定します。
+#    このプレフィックスは `all:` を含みます。
+#
+#    注: これはすべての環境で機能しません。詳細情報については、
+#    以下の追加ノートを参照してください。
+#
+#    利用可能バージョン: macOSで1.0.0、GTKで1.2.0
+#
+#  * `unconsumed:`
+#
+#    入力を消費しません。デフォルトでは、キーバインディングが入力を消費します。
+#    つまり、関連するエンコーディング（存在する場合）がターミナルで実行中の
+#    プログラムに送信されません。エンコードされた値をプログラムに送信する場合は、
+#    キーバインディング全体の前に `unconsumed:` プレフィックスを指定します。
+#    たとえば: `unconsumed:ctrl+a=reload_config`。`global:` および `all:` プレフィックス付きの
+#    キーバインディングは、この設定に関係なく常に入力を消費します。特定の
+#    ターミナルサーフェースに関連付けられていないため、エンコードされません。
+#
+#    利用可能バージョン: 1.0.0
+#
+#  * `performable:`
+#
+#    アクションが実行できる場合にのみ入力を消費します。たとえば、
+#    `copy_to_clipboard` アクションはコピーするコピー対象がある場合にのみ入力を
+#    消費します。選択がない場合、Ghosttyはキーバインディングが設定されていない
+#    かのように動作します。これは `global:` または `all:` プレフィックス付きの
+#    キーバインディングには効果がありません。キーシーケンスの場合、アクションが
+#    実行できない場合、シーケンスはリセットされます（キーバインディングが
+#    設定されていないのと同じように動作します）。
+#
+#    実行可能なキーバインディングはアプリケーションメニューのメニューショートカットとして
+#    表示されません。これはメニューショートカットが、ターミナルの状態に関係なく
+#    アクションを実行するように強制するためです。実行可能なキーバインディングは
+#    引き続き機能しますが、メニューのショートカットラベルとして表示されません。
+#
+#    利用可能バージョン: 1.1.0
+#
+# キーバインディングトリガーはプレフィックスの組み合わせごとに一意ではありません。
+# たとえば、`ctrl+a` と `global:ctrl+a` は2つの別のキーバインディングではありません。
+# 後に設定されたキーバインディングが前に設定されたキーバインディングを上書きします。
+# この場合、`global:` キーバインディングが使用されます。
+#
+# 複数のプレフィックスを指定できます。たとえば、
+# `global:unconsumed:ctrl+a=reload_config` は、キーバインディングをグローバルにし、
+# 入力を消費して設定をリロードしません。
+#
+# 注: `global:` はmacOSおよび特定のLinuxプラットフォームでのみサポートされています。
+#
+# macOSでは、この機能を使用するにはGhosttyにアクセシビリティ権限を付与する必要があります。
+# `global:` キーバインディングが指定されて、Ghosttyが起動またはリロードされると、
+# Ghosttyはこれらの権限をリクエストしようとします。権限が付与されない場合、
+# キーバインディングは機能しません。macOSでは、これらの権限は
+# システム環境設定 -> プライバシーとセキュリティ -> アクセシビリティ で確認できます。
+#
+# Linuxでは、デスクトップ環境がXDGデスクトッププロトコル実装の一部として
+# [Global Shortcuts](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.GlobalShortcuts.html)
+# プロトコルを実装している必要があります。グローバルショートカットをサポート
+# （またはサポートしていない）することが知られているデスクトップ環境には:
+#
+#  - KDE Plasma（[5.27](https://kde.org/announcements/plasma/5/5.27.0/#wayland) 以降）
+#    およびGNOME（[48](https://release.gnome.org/48/#and-thats-not-all) 以降）を使用している
+#    ユーザーは、ほとんど設定なしでグローバルショートカットを使用できるはずです。
+#
+#  - Hyprlandには手動設定が必要です。[Hyprland Wiki](https://wiki.hyprland.org/Configuring/Binds/#dbus-global-shortcuts)
+#    に説明されているステップを参照して、グローバルショートカットを正しく設定してください。
+#    （重要: [`xdg-desktop-portal-hyprland`](https://wiki.hyprland.org/Hypr-Ecosystem/xdg-desktop-portal-hyprland/)
+#    もインストールする必要があります！）
+#
+#  - 特に注目すべきは、Sway などの wlroots ベースのコンポジターには
+#    グローバルショートカットが実装されていません（[アップストリームの問題](https://github.com/emersion/xdg-desktop-portal-wlr/issues/240) を参照）。
+keybind = super+shift+d=new_split:down
+keybind = super+enter=toggle_fullscreen
+keybind = super+alt+shift+j=write_screen_file:open
+keybind = super+2=goto_tab:2
+keybind = super+digit_6=goto_tab:6
+keybind = super+k=clear_screen
+keybind = super+page_down=scroll_page_down
+keybind = super+4=goto_tab:4
+keybind = super+shift+z=redo
+keybind = super+shift+v=paste_from_selection
+keybind = super+w=close_surface
+keybind = shift+page_down=adjust_selection:page_down
+keybind = super+7=goto_tab:7
+keybind = shift+arrow_down=adjust_selection:down
+keybind = super+bracket_left=goto_split:previous
+keybind = super+5=goto_tab:5
+keybind = super+3=goto_tab:3
+keybind = super+a=select_all
+keybind = super+arrow_left=text:\\x01
+keybind = shift+page_up=adjust_selection:page_up
+keybind = super+0=reset_font_size
+keybind = super+digit_2=goto_tab:2
+keybind = super+shift+bracket_left=previous_tab
+keybind = super+shift+,=reload_config
+keybind = super+,=open_config
+keybind = super+ctrl+shift+j=write_screen_file:copy
+keybind = paste=paste_from_clipboard
+keybind = super+bracket_right=goto_split:next
+keybind = super+alt+arrow_up=goto_split:up
+keybind = super+ctrl+arrow_right=resize_split:right,10
+keybind = alt+arrow_left=esc:b
+keybind = super+equal=increase_font_size:1
+keybind = ctrl+tab=next_tab
+keybind = super+digit_4=goto_tab:4
+keybind = super+q=quit
+keybind = super+shift+arrow_up=jump_to_prompt:-1
+keybind = super+alt+arrow_right=goto_split:right
+keybind = super+ctrl+equal=equalize_splits
+keybind = super+digit_7=goto_tab:7
+keybind = super+ctrl+f=toggle_fullscreen
+keybind = super+backspace=text:\\x15
+keybind = super+6=goto_tab:6
+keybind = super+page_up=scroll_page_up
+keybind = super+1=goto_tab:1
+keybind = super+alt+w=close_tab:this
+keybind = super+end=scroll_to_bottom
+keybind = super+-=decrease_font_size:1
+keybind = super+arrow_up=jump_to_prompt:-1
+keybind = super+shift+t=undo
+keybind = super+alt+arrow_left=goto_split:left
+keybind = super+z=undo
+keybind = super+digit_8=goto_tab:8
+keybind = super+9=last_tab
+keybind = shift+arrow_up=adjust_selection:up
+keybind = super+home=scroll_to_top
+keybind = super+digit_1=goto_tab:1
+keybind = super+shift+w=close_window
+keybind = super+alt+shift+w=close_all_windows
+keybind = super+ctrl+arrow_down=resize_split:down,10
+keybind = super+t=new_tab
+keybind = shift+end=adjust_selection:end
+keybind = super+v=paste_from_clipboard
+keybind = shift+arrow_right=adjust_selection:right
+keybind = super+c=copy_to_clipboard
+keybind = super+ctrl+arrow_left=resize_split:left,10
+keybind = super+shift+enter=toggle_split_zoom
+keybind = super+arrow_right=text:\\x05
+keybind = super++=increase_font_size:1
+keybind = super+shift+p=toggle_command_palette
+keybind = super+8=goto_tab:8
+keybind = shift+arrow_left=adjust_selection:left
+keybind = super+shift+arrow_down=jump_to_prompt:1
+keybind = super+alt+arrow_down=goto_split:down
+keybind = copy=copy_to_clipboard
+keybind = super+shift+j=write_screen_file:paste
+keybind = super+shift+bracket_right=next_tab
+keybind = super+arrow_down=jump_to_prompt:1
+keybind = ctrl+shift+tab=previous_tab
+keybind = alt+arrow_right=esc:f
+keybind = super+n=new_window
+keybind = shift+home=adjust_selection:home
+keybind = super+alt+i=inspector:toggle
+keybind = super+digit_5=goto_tab:5
+keybind = super+digit_3=goto_tab:3
+keybind = super+ctrl+arrow_up=resize_split:up,10
+keybind = super+d=new_split:right

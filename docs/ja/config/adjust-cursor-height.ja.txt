@@ -1,0 +1,4 @@
+# ピクセルまたはパーセンテージでカーソル高さを調整します。現在、すべてのカーソルタイプ
+# （bar、rect、outlined rect）に適用されます。
+# `adjust-cell-width` の調整に関するメモを参照してください。
+adjust-cursor-height =
