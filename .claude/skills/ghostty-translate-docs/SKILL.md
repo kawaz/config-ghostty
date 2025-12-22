@@ -1,11 +1,7 @@
 ---
 name: ghostty-translate-docs
-description: Ghosttyドキュメントを日本語に翻訳
+description: ghosttyドキュメントを日本語に翻訳
 ---
-
-# Ghostty ドキュメント翻訳
-
-Ghosttyの設定・アクションドキュメントを日本語に翻訳する。
 
 ## 使い方
 
