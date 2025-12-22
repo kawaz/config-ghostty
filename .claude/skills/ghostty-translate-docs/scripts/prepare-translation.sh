@@ -1,7 +1,11 @@
 #!/bin/bash
 # prepare-translation.sh - Prepare translation batch files
 #
-# Usage: ./prepare-translation.sh <docs_dir> [batch_size]
+# Usage: ./prepare-translation.sh [docs_dir] [batch_size]
+#
+# Arguments:
+#   docs_dir    - Target docs directory (default: $GHOSTTY_CONFIG_DIR/docs)
+#   batch_size  - Files per batch (default: 50)
 #
 # This script:
 # 1. Runs split-docs.sh to extract English docs to new-en/
@@ -20,17 +24,20 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-if [[ $# -lt 1 ]]; then
-    echo "Usage: $0 <docs_dir> [batch_size]" >&2
-    exit 1
-fi
+# Get default docs_dir from Ghostty config directory
+get_default_docs_dir() {
+    local config_dir
+    config_dir="$("$SCRIPT_DIR/get-ghostty-config-dir.sh")"
+    echo "$config_dir/docs"
+}
 
-DOCS_DIR="$1"
-BATCH_SIZE="${2:-10}"
+DOCS_DIR="${1:-$(get_default_docs_dir)}"
+BATCH_SIZE="${2:-50}"
 
+# Create docs_dir if it doesn't exist
 if [[ ! -d "$DOCS_DIR" ]]; then
-    echo "Error: docs_dir '$DOCS_DIR' does not exist" >&2
-    exit 1
+    echo "Creating docs directory: $DOCS_DIR" >&2
+    mkdir -p "$DOCS_DIR"
 fi
 
 DOCS_DIR="$(cd "$DOCS_DIR" && pwd)"
