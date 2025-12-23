@@ -78,29 +78,74 @@ fi
 # Count files
 TOTAL_FILES=$(echo "$NEED_TRANSLATE" | wc -l | tr -d ' ')
 
-# Split into batch files
-BATCH_NUM=1
-FILE_COUNT=0
-BATCH_FILE="$TMP_DIR/translate-batch-$BATCH_NUM.txt"
-
 mkdir -p "$TMP_DIR"
 
-while IFS= read -r file; do
-    [[ -z "$file" ]] && continue
+# Step 3: Group files by config names (files sharing same comment block)
+# Extract config names from each .en.txt and create group key
+echo "=== Grouping related configs ===" >&2
 
-    echo "$file" >> "$BATCH_FILE"
-    ((FILE_COUNT++))
+GROUP_MAP_FILE="$TMP_DIR/group-map.txt"
+> "$GROUP_MAP_FILE"
 
-    if [[ $FILE_COUNT -ge $BATCH_SIZE ]]; then
-        ((BATCH_NUM++))
-        FILE_COUNT=0
-        BATCH_FILE="$TMP_DIR/translate-batch-$BATCH_NUM.txt"
-    fi
+while IFS= read -r rel_path; do
+    [[ -z "$rel_path" ]] && continue
+
+    # Get full path to .en.txt
+    full_path="$EN_DIR/${rel_path}.en.txt"
+
+    # Extract config names and create sorted group key
+    group_key=$(grep -oE '^[a-zA-Z0-9-]+[[:space:]]*=' "$full_path" 2>/dev/null \
+        | sed 's/[[:space:]]*=$//' \
+        | sort \
+        | tr '\n' ',' \
+        | sed 's/,$//' || echo "$rel_path")
+
+    # Store: group_key<TAB>rel_path
+    printf '%s\t%s\n' "$group_key" "$rel_path" >> "$GROUP_MAP_FILE"
 done <<< "$NEED_TRANSLATE"
 
-# Adjust batch count (last batch might be partial)
-if [[ $FILE_COUNT -eq 0 ]]; then
-    ((BATCH_NUM--))
+# Count unique groups
+UNIQUE_GROUPS=$(cut -f1 "$GROUP_MAP_FILE" | sort -u | wc -l | tr -d ' ')
+echo "グループ数: $UNIQUE_GROUPS (ファイル数: $TOTAL_FILES)" >&2
+
+# Split into batch files, keeping groups together
+# Sort by group key to ensure same groups are together
+sort -t$'\t' -k1,1 "$GROUP_MAP_FILE" > "$TMP_DIR/group-map-sorted.txt"
+
+BATCH_NUM=1
+GROUP_COUNT=0
+LAST_GROUP=""
+BATCH_FILE="$TMP_DIR/translate-batch-$BATCH_NUM.txt"
+
+while IFS=$'\t' read -r group_key rel_path; do
+    [[ -z "$rel_path" ]] && continue
+
+    # Check if this is a new group
+    if [[ "$group_key" != "$LAST_GROUP" ]]; then
+        if [[ -n "$LAST_GROUP" ]]; then
+            ((GROUP_COUNT++))
+        fi
+
+        # Start new batch after BATCH_SIZE groups
+        if [[ $GROUP_COUNT -ge $BATCH_SIZE ]]; then
+            ((BATCH_NUM++))
+            GROUP_COUNT=0
+            BATCH_FILE="$TMP_DIR/translate-batch-$BATCH_NUM.txt"
+        fi
+
+        LAST_GROUP="$group_key"
+    fi
+
+    # Write file with group key prefix
+    echo "${group_key}:${rel_path}" >> "$BATCH_FILE"
+done < "$TMP_DIR/group-map-sorted.txt"
+
+# Clean up temp files
+rm -f "$GROUP_MAP_FILE" "$TMP_DIR/group-map-sorted.txt"
+
+# Ensure at least one batch exists
+if [[ ! -f "$TMP_DIR/translate-batch-1.txt" ]]; then
+    BATCH_NUM=0
 fi
 
 # Output summary

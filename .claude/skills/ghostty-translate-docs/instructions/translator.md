@@ -18,26 +18,40 @@
 - `docs_dir`: ドキュメントディレクトリのパス
 - ファイルリスト: `{docs_dir}/.tmp.ghostty-translate-docs/translate-batch-{n}.txt`
 
-リストには翻訳対象が1行1ファイルで記載されている（`category/name` 形式）:
+リストは `group_key:category/name` 形式で、同じコメントを共有する設定がグループ化されている:
 ```
-config/font-size
-config/theme
-actions/copy_to_clipboard
+font-size:config/font-size
+adjust-cell-height,adjust-cell-width:config/adjust-cell-height
+adjust-cell-height,adjust-cell-width:config/adjust-cell-width
 ```
+
+**重要**: 同じグループキーを持つファイル（adjust-cell-height と adjust-cell-width など）は関連設定である。
+これらは同じ .en.txt 内容を持ち、翻訳の一貫性を保つため一緒に処理すること。
 
 ## 処理手順
 
-各ファイルについて以下の4つを生成する:
+### 1. バッチファイルの解析とグループ化
 
-### 1. platform.json の読み込み
+バッチファイルを読み込み、グループキーでグループ化する:
+```
+{
+  "font-size": ["config/font-size"],
+  "adjust-cell-height,adjust-cell-width": ["config/adjust-cell-height", "config/adjust-cell-width"]
+}
+```
+
+### 2. platform.json の読み込み
 
 `{docs_dir}/platform.json` を読み込み、各ファイルのプラットフォーム情報を取得する。
 
-### 2. 英語版 .txt の読み込み
+### 3. グループ単位で処理
 
-**Read ツール**で `{docs_dir}/en/{category}/{name}.en.txt` を読む。
+各グループについて:
 
-### 3. 英語版 .md の生成
+1. **グループ内の1つの .en.txt を読み込む**（同じ内容なので1つでよい）
+2. **グループ内の各ファイルについて** .en.md, .ja.txt, .ja.md を生成
+
+### 4. 英語版 .md の生成
 
 読み込んだ .en.txt から .en.md を生成。YAML frontmatter を含める。
 
@@ -197,13 +211,13 @@ See `xxx-width` for more details.
 - `["macos", "linux"]` → `macos, linux`
 - `["linux", "windows"]` → `linux, windows`
 
-### 4. 日本語版 .txt の生成
+### 5. 日本語版 .txt の生成
 
 英語版 .en.txt を日本語に翻訳し、`{docs_dir}/ja/{category}/{name}.ja.txt` として保存。
 
 **注意**: .txt は元の構造をそのまま維持して翻訳する。.md のような見せ方のアレンジは不要。
 
-### 5. 日本語版 .md の生成
+### 6. 日本語版 .md の生成
 
 英語版 .en.md を日本語に翻訳し、`{docs_dir}/ja/{category}/{name}.ja.md` として保存。
 
