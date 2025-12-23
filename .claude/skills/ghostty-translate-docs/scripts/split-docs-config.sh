@@ -1,17 +1,14 @@
 #!/bin/bash
 #
-# split-config-docs.sh - Split ghostty config docs into individual files
+# split-docs-config.sh - Split ghostty config docs into individual files
 #
-# Usage: ./split-config-docs.sh <outdir>
+# Usage: ./split-docs-config.sh <outdir>
 #
 # == Split Logic ==
-# Split on empty lines.
-#
-# == Rename Logic ==
-# Extract the first config name from each file using:
-#   grep -m1 -Eo '^[a-zA-Z0-9-]+'
-# Then rename the file to {config-name}.en.txt
-# Files without a config name (comment-only blocks) are discarded.
+# 1. Comment lines belong to the next config(s)
+# 2. Config lines after comments form a block
+# 3. When a new comment appears after config line(s), start new block
+# 4. Each config name gets its own file with the whole block content
 #
 
 set -euo pipefail
@@ -22,62 +19,65 @@ if [[ $# -ne 1 ]]; then
 fi
 
 outdir="$1"
-
-# Create output directory
 mkdir -p "$outdir"
 
 # Get ghostty config docs
 docs=$(ghostty +show-config --default --docs 2>/dev/null || true)
 
-# Split by empty lines
-file_num=0
-current_block=""
+pending_comments=""  # Comments waiting for config
+current_block=""     # Current block (comments + configs)
+has_config=false     # Whether current block has any config lines
+file_count=0
+
+save_block() {
+  local content="$1"
+  [[ -z "$content" ]] && return
+
+  # Extract all config names from this block
+  local config_names
+  config_names=$(echo "$content" | grep -oE '^[a-zA-Z0-9-]+[[:space:]]*=' | sed 's/[[:space:]]*=$//' || true)
+
+  if [[ -z "$config_names" ]]; then
+    return
+  fi
+
+  # Create a file for each config name (same content)
+  for name in $config_names; do
+    echo "$content" > "$outdir/${name}.en.txt"
+    ((file_count++))
+  done
+}
 
 while IFS= read -r line; do
-  if [[ -z "$line" ]]; then
-    # Empty line - save current block if not empty
-    if [[ -n "$current_block" ]]; then
-      printf "%s\n" "$current_block" > "$outdir/$(printf '%04d' $file_num).txt"
-      ((file_num++))
+  # Skip empty lines
+  [[ -z "$line" ]] && continue
+
+  if [[ "$line" =~ ^# ]]; then
+    # Comment line
+    if $has_config; then
+      # We had config(s), this comment starts a new block
+      save_block "$current_block"
       current_block=""
+      has_config=false
     fi
-  else
-    # Add line to current block
+    # Accumulate comment
     if [[ -n "$current_block" ]]; then
       current_block="$current_block"$'\n'"$line"
     else
       current_block="$line"
     fi
+  elif [[ "$line" =~ ^[a-zA-Z0-9-]+[[:space:]]*= ]]; then
+    # Config line - add to current block
+    if [[ -n "$current_block" ]]; then
+      current_block="$current_block"$'\n'"$line"
+    else
+      current_block="$line"
+    fi
+    has_config=true
   fi
 done <<< "$docs"
 
-# Save last block if exists
-if [[ -n "$current_block" ]]; then
-  printf "%s\n" "$current_block" > "$outdir/$(printf '%04d' $file_num).txt"
-fi
+# Save last block
+save_block "$current_block"
 
-echo "Created $((file_num + 1)) numbered files in $outdir"
-
-# Rename files based on first config name, discard comment-only blocks
-renamed=0
-discarded=0
-for f in "$outdir"/*.txt; do
-  # Extract first config name (line starting with alphanumeric/dash)
-  config_name=$(grep -m1 -Eo '^[a-zA-Z0-9-]+' "$f" 2>/dev/null || true)
-
-  if [[ -n "$config_name" ]]; then
-    new_name="$outdir/${config_name}.en.txt"
-    if [[ "$f" != "$new_name" ]]; then
-      mv "$f" "$new_name"
-      echo "Renamed $(basename "$f") -> ${config_name}.en.txt"
-      ((renamed++))
-    fi
-  else
-    # No config name found - discard this file
-    rm "$f"
-    echo "Discarded $(basename "$f") (comment-only block)"
-    ((discarded++))
-  fi
-done
-
-echo "Done! Renamed: $renamed, Discarded: $discarded"
+echo "Created $file_count config files in $outdir"
