@@ -46,8 +46,10 @@
 
 ```
 docs/
-├── category.json              # カテゴリ定義
-├── platform.json              # プラットフォーム判定
+├── category.json              # カテゴリ定義（次回参照用に保持）
+├── platform.json              # プラットフォーム判定（次回参照用に保持）
+├── .tmp.ghostty-translate-docs/  # 一時ファイル
+│   └── translate-batch-*.txt     # バッチファイル
 ├── en/
 │   ├── index-all.en.md        # 全項目
 │   ├── index-macos.en.md      # macOS用

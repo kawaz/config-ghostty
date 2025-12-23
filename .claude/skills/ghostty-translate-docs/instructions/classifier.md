@@ -64,6 +64,8 @@
 
 ### 3. JSON ファイルの出力
 
+出力先: `{docs_dir}/`
+
 #### category.json
 
 ```json
