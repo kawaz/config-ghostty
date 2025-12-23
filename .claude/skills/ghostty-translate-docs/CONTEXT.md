@@ -2,119 +2,99 @@
 
 ## 現在の状態
 
-スキルは完成し、テスト済み。
+**完了**: プラットフォーム別ドキュメント生成機能を追加
 
-### ファイル構成
+### 実施した修正 (2025-12-23)
+
+1. **classifier.md 新規作成**（分類ワーカー）:
+   - category.json 生成（意味的なカテゴリ分類）
+   - platform.json 生成（プラットフォーム判定）
+   - index-*.en.md 生成（4種類のインデックス）
+
+2. **orchestrator.md 更新**:
+   - 分類ワーカー → 翻訳ワーカーのフローに拡張
+
+3. **translator.md 更新**:
+   - .en.txt 翻訳時に .en.md, .ja.md も同時生成
+
+### テスト結果 (2025-12-23)
+
+- 分類ワーカー: category.json (17カテゴリ), platform.json (233項目), index-*.en.md (4件) 正常生成
+- 翻訳ワーカー: .en.md, .ja.txt, .ja.md 全て正常生成
+
+## アーキテクチャ
+
+```
+オーケストレーター
+  │
+  ├─ 1. Bash: prepare-translation.sh (en.txt生成、バッチ分割)
+  │
+  ├─ 2. Task: 分類ワーカー × 1 (sonnet)
+  │      - category.json 作成/更新
+  │      - platform.json 作成
+  │      - index-*.en.md 生成
+  │
+  ├─ 3. Task: 翻訳ワーカー × N (haiku、並列)
+  │      - *.en.md 生成
+  │      - *.ja.txt 生成
+  │      - *.ja.md 生成
+  │
+  └─ 4. 結果報告
+```
+
+## 出力ファイル構造
+
+```
+docs/
+├── category.json              # カテゴリ定義
+├── platform.json              # プラットフォーム判定
+├── en/
+│   ├── index-all.en.md        # 全項目
+│   ├── index-macos.en.md      # macOS用
+│   ├── index-linux.en.md      # Linux用
+│   ├── index-platform-specific.en.md
+│   ├── config/*.en.txt, *.en.md
+│   └── actions/*.en.txt, *.en.md
+└── ja/
+    ├── index-*.ja.md          # 翻訳版
+    ├── config/*.ja.txt, *.ja.md
+    └── actions/*.ja.txt, *.ja.md
+```
+
+## platform.json 形式
+
+```json
+{
+  "config/font-family": ["all"],
+  "config/macos-icon": ["macos"],
+  "config/gtk-titlebar": ["linux"],
+  "config/some-feature": ["macos", "windows"],
+  "actions/show_gtk_inspector": ["linux", "windows"]
+}
+```
+
+型: `("macos" | "linux" | "windows" | "all")[]`
+
+## ファイル構成
+
 ```
 .claude/skills/ghostty-translate-docs/
-├── SKILL.md
-├── CONTEXT.md              # このファイル
+├── SKILL.md                      # メインが読む
+├── CONTEXT.md                    # このファイル
 ├── instructions/
-│   ├── orchestrator.md     # オーケストレーター用指示書
-│   └── translator.md       # 翻訳ワーカー用指示書
+│   ├── orchestrator.md           # オーケストレーター
+│   ├── classifier.md             # 分類ワーカー
+│   └── translator.md             # 翻訳ワーカー
 └── scripts/
-    ├── prepare-translation.sh    # 前処理（バッチファイル作成まで）
-    ├── get-ghostty-config-dir.sh # ghostty config dir 取得
-    ├── split-docs.sh             # ghosttyからドキュメント分割のみ
-    ├── detect-changes.sh         # 差分検出＆deprecated処理
-    ├── split-docs-config.sh      # config分割
-    └── split-docs-actions.sh     # actions分割
-
-.claude/commands/ghostty-translate-docs.md  # スラッシュコマンド
+    ├── prepare-translation.sh
+    ├── get-ghostty-config-dir.sh
+    ├── split-docs.sh
+    ├── detect-changes.sh
+    ├── split-docs-config.sh
+    └── split-docs-actions.sh
 ```
-
-### スクリプト責務
-
-| スクリプト | 責務 |
-|------------|------|
-| prepare-translation.sh | 全体オーケストレーション、バッチファイル作成 |
-| get-ghostty-config-dir.sh | ghostty config ディレクトリのパス取得 |
-| split-docs.sh | ghosttyからドキュメント取得・分割 |
-| detect-changes.sh | ハッシュ比較・差分検出・deprecated処理 |
-
-### デフォルトの docs_dir
-
-`get-ghostty-config-dir.sh` で取得した ghostty config ディレクトリ内の `docs/`。
-優先順位:
-1. `$XDG_CONFIG_HOME/ghostty` (存在すれば)
-2. `~/.config/ghostty` (存在すれば)
-3. `~/Library/Application Support/com.mitchellh.ghostty` (macOS)
-
-## アーキテクチャ設計
-
-### 二段構成
-
-メインコンテキストの消費を最小限に抑えるため、二段構成を採用:
-
-```
-┌──────────────────┐
-│ メインエージェント │  コンテキスト: 最小
-│ (ユーザーと対話)  │  役割: オーケストレーターを claude -p で起動
-└────────┬─────────┘
-         │ Bash: claude -p (1プロセス)
-         ↓
-┌──────────────────┐
-│ オーケストレーター │  コンテキスト: 中
-│ (独立セッション)  │  役割: prepare-translation.sh 実行
-│                  │        Task でワーカーを並列起動
-└────────┬─────────┘
-         │ Task × N (並列)
-         ↓
-┌──────────────────┐
-│ 翻訳ワーカー × N  │  コンテキスト: 大（翻訳内容）
-│                  │  役割: 実際の翻訳作業
-└──────────────────┘
-```
-
-### 【重要】サブエージェントのネスト制限と対応
-
-**Claude Code の制限**: サブエージェントは更にサブエージェントを起動できない。
-
-```
-メイン → Task(オーケストレーター) → Task(ワーカー)（NG！）
-```
-
-**対応策: オーケストレーターを claude -p で起動**
-
-オーケストレーターを `claude -p` で起動すれば独立セッションになり、
-そこからは普通に Task でワーカーを起動できる（1段のサブエージェントなのでOK）。
-
-```
-メイン → claude -p (オーケストレーター) → Task × N (ワーカー)（OK！）
-```
-
-ポイント：
-- claude -p で起動するのはオーケストレーター1つだけ（プロセス爆発しない）
-- オーケストレーターから見てワーカーは1段のサブエージェント（制限に抵触しない）
-
-### 出力制御によるコンテキスト節約
-
-**重要**: 各エージェントは処理結果の「内容」を返さない。
-
-```
-ワーカー:
-  ✗ 翻訳結果を返す → オーケストレーターのコンテキストが爆発
-  ○ ファイルに書き込み、「完了: 10件」とだけ返す
-
-オーケストレーター:
-  ○ 各ワーカーの完了報告を集約
-  ○ 「成功: 233件、失敗: 0件」とメインに報告
-
-メイン:
-  ○ オーケストレーターの報告をそのままユーザーに伝える
-```
-
-### テスト可能性
-
-- detect-changes.sh は単体でテスト可能
-- `detect-changes.sh <new-en> <en> <ja>` で任意のディレクトリをテスト
-- `prepare-translation.sh` 単体でバッチファイル作成まで確認可能
-
-### ポータビリティ
-
-- bash 3.x互換（declare -A 不使用）
-- デフォルトdocs_dir: `$(get-ghostty-config-dir.sh)/docs`
 
 ## 関連Issue
 
-- #1: サブエージェントのネスト制限対応
+- #1: サブエージェントのネスト制限対応（解決済み）
+- #3: バッチ分割と並列処理の改善（解決済み）
