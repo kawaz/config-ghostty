@@ -1,5 +1,10 @@
 # Ghostty ドキュメント翻訳オーケストレーター
 
+## 前提条件
+
+呼び出し元から `SKILL_DIR` を受け取っていること。
+すべてのスクリプトと指示書は `${SKILL_DIR}/...` で参照する。
+
 ## 設定
 
 - `MAX_WORKERS`: 5（同時実行ワーカー数）
@@ -24,7 +29,7 @@ Phase 5: 結果報告
 ### Phase 1: 準備スクリプトを実行
 
 ```bash
-.claude/skills/ghostty-translate-docs/scripts/prepare-translation.sh
+${SKILL_DIR}/scripts/prepare-translation.sh
 ```
 
 出力から以下を取得:
@@ -59,7 +64,7 @@ Task ツールを使用:
 
 プロンプトテンプレート:
 ```
-.claude/skills/ghostty-translate-docs/instructions/digest-worker.md を読んで実行。
+${SKILL_DIR}/instructions/digest-worker.md を読んで実行。
 docs_dir={DOCS_DIR}
 batch_file={TMP_DIR}/batch-{N}.txt
 output_file={TMP_DIR}/digests-{N}.json
@@ -76,7 +81,7 @@ output_file={TMP_DIR}/digests-{N}.json
 **シェルスクリプトでマージ**（オーケストレーターはファイル内容を読まない）:
 
 ```bash
-.claude/skills/ghostty-translate-docs/scripts/merge-digests.sh {TMP_DIR}
+${SKILL_DIR}/scripts/merge-digests.sh {TMP_DIR}
 ```
 
 出力: `MERGED: {件数} entries -> {TMP_DIR}/digests.json`
@@ -97,7 +102,7 @@ Task ツールを使用:
 
 プロンプト:
 ```
-.claude/skills/ghostty-translate-docs/instructions/classifier.md を読んで実行。
+${SKILL_DIR}/instructions/classifier.md を読んで実行。
 docs_dir={DOCS_DIR}
 digests_file={TMP_DIR}/digests.json
 ```
@@ -120,7 +125,7 @@ Task ツールを使用:
 
 プロンプトテンプレート:
 ```
-.claude/skills/ghostty-translate-docs/instructions/translator.md を読んで実行。
+${SKILL_DIR}/instructions/translator.md を読んで実行。
 docs_dir={DOCS_DIR}
 batch_file={TMP_DIR}/batch-{N}.txt
 digests_file={TMP_DIR}/digests.json
