@@ -5,6 +5,17 @@
 呼び出し元から `SKILL_DIR` を受け取っていること。
 すべてのスクリプトと指示書は `${SKILL_DIR}/...` で参照する。
 
+## コンテキスト節約ルール（厳守）
+
+**TaskOutput の戻り値は絶対に読まない。**
+
+**理由**: TaskOutput にはワーカーの全出力が含まれる可能性があり、これを読むとオーケストレーターのコンテキストが大量に消費される。特に `--verbose` モードでは全ツール呼び出しログが含まれ、8ワーカー × 数万トークンでコンテキストが破綻する。
+
+**対策**:
+- ワーカーの結果は **結果ファイル** に出力させる
+- オーケストレーターは結果ファイルを **Read ツール** で確認する
+- TaskOutput は完了検知（ポーリングの代替）としてのみ使用し、戻り値は無視する
+
 ## 設定
 
 - `MAX_WORKERS`: 5（同時実行ワーカー数）
@@ -68,11 +79,19 @@ ${SKILL_DIR}/instructions/digest-worker.md を読んで実行。
 docs_dir={DOCS_DIR}
 batch_file={TMP_DIR}/batch-{N}.txt
 output_file={TMP_DIR}/digests-{N}.json
+result_file={TMP_DIR}/digest-result-{N}.txt
 ```
 
-#### 2.2 完了通知を待機
+#### 2.2 完了待機と結果確認
 
-全ワーカーをバックグラウンドで起動し、完了通知を待つ。**ポーリング不要**。
+1. 全結果ファイルの存在をポーリングで確認:
+```bash
+while [ $(ls {TMP_DIR}/digest-result-*.txt 2>/dev/null | wc -l) -lt {BATCH_COUNT} ]; do sleep 3; done
+```
+
+2. 結果ファイルを Read ツールで確認（各ファイルは1行: `OK: {件数}件`）
+
+**禁止**: TaskOutput の戻り値を読むこと
 
 ### Phase 3: ダイジェストマージ + 分類
 
@@ -90,13 +109,13 @@ ${SKILL_DIR}/scripts/merge-digests.sh {TMP_DIR}
 
 #### 3.2 分類ワーカーを起動
 
-**1つ** のワーカーを起動（フォアグラウンド）:
+**1つ** のワーカーをバックグラウンドで起動:
 
 ```
 Task ツールを使用:
 - subagent_type: general-purpose
 - model: opus（分類は複雑なため、最高性能モデルを使用）
-- run_in_background: false
+- run_in_background: true
 - prompt:
 ```
 
@@ -105,9 +124,19 @@ Task ツールを使用:
 ${SKILL_DIR}/instructions/classifier.md を読んで実行。
 docs_dir={DOCS_DIR}
 digests_file={TMP_DIR}/digests.json
+result_file={TMP_DIR}/classify-result.txt
 ```
 
-完了を待つ。
+#### 3.3 完了待機と結果確認
+
+1. 結果ファイルの存在をポーリングで確認:
+```bash
+while [ ! -f {TMP_DIR}/classify-result.txt ]; do sleep 3; done
+```
+
+2. 結果ファイルを Read ツールで確認
+
+**禁止**: TaskOutput の戻り値を読むこと
 
 ### Phase 4: 翻訳（並列ワーカー）
 
@@ -129,11 +158,19 @@ ${SKILL_DIR}/instructions/translator.md を読んで実行。
 docs_dir={DOCS_DIR}
 batch_file={TMP_DIR}/batch-{N}.txt
 digests_file={TMP_DIR}/digests.json
+result_file={TMP_DIR}/translate-result-{N}.txt
 ```
 
-#### 4.2 完了通知を待機
+#### 4.2 完了待機と結果確認
 
-Phase 2 と同様に、通知を待機して結果を収集。ポーリングは不要。
+1. 全結果ファイルの存在をポーリングで確認:
+```bash
+while [ $(ls {TMP_DIR}/translate-result-*.txt 2>/dev/null | wc -l) -lt {BATCH_COUNT} ]; do sleep 3; done
+```
+
+2. 結果ファイルを Read ツールで確認（各ファイルは1行: `完了:15/15` または `失敗:2/15 ...`）
+
+**禁止**: TaskOutput の戻り値を読むこと
 
 ### Phase 5: 結果報告
 
