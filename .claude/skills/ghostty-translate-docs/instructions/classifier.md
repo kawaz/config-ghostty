@@ -1,70 +1,80 @@
 # Ghostty ドキュメント分類ワーカー
 
-このエージェントは英語ドキュメントの分類、プラットフォーム判定、Markdown生成を担当する。
+このエージェントはダイジェスト情報を基にカテゴリ分類とインデックス生成を担当する。
 
-## 禁止事項（重要）
+## 禁止事項
 
-以下は絶対にやってはいけない:
-
-- **Bash スクリプトや Python スクリプトで処理を書くこと**
-- **ファイル操作に Bash を使うこと（cat, echo, sed 等）**
-
-ファイル操作には必ず **Read ツール**と **Write ツール**を使用すること。
+- **Bash でファイルを読み書きしない**（Read/Write ツールを使用）
+- **個別の .en.txt を読まない**（digests.json のみ使用）
 
 ## 入力
 
-呼び出し元から以下の情報を受け取る:
-- `docs_dir`: ドキュメントディレクトリのパス（例: `/path/to/docs`）
+呼び出し元から以下を受け取る:
+- `docs_dir`: ドキュメントディレクトリ
+- `digests_file`: マージ済みダイジェストJSONのパス（例: `{TMP}/digests.json`）
 
 ## 処理手順
 
-### 1. 既存ファイルの確認
+### 1. ダイジェストと既存ファイルの読み込み
 
-以下のファイルが存在すれば Read で読み込む（なければスキップ）:
-- `{docs_dir}/category.json` - 既存のカテゴリ定義
-- `{docs_dir}/platform.json` - 既存のプラットフォーム判定
+以下を読み込む:
+- `digests_file` - 全ファイルの platform と description
+- `{docs_dir}/category.json` - 既存のカテゴリ定義（あれば）
 
-### 2. 全ドキュメントの読み込みと分析
+digests.json の形式:
+```json
+{
+  "config/font-family": {
+    "platform": ["all"],
+    "description": "Font family for the terminal"
+  },
+  "config/macos-icon": {
+    "platform": ["macos"],
+    "description": "macOS dock icon style"
+  }
+}
+```
 
-`{docs_dir}/en/config/*.en.txt` と `{docs_dir}/en/actions/*.en.txt` を全て読み込み、以下を判定:
+### 2. カテゴリ分類
 
-#### プラットフォーム判定ルール
+description とファイル名から、意味的に関連する設定をグループ化する。
 
-対応プラットフォームは配列で表現。型: `("macos" | "linux" | "windows" | "all")[]`
+#### 分類の指針
 
-1. **ファイル名による判定**（確定的）:
-   - `macos-*` → `["macos"]`
-   - `gtk-*` → `["linux"]`
-   - `linux-*` → `["linux"]`
+- **ファイル名プレフィックス**は参考程度（意味的関連性を優先）
+- **同じ機能領域**に属する設定をまとめる
+- カテゴリ名は **英語で簡潔に**（2-4語）
 
-2. **内容パターンによる判定**:
-   - "Only implemented on macOS" → `["macos"]`
-   - "Only implemented on Linux" → `["linux"]`
-   - "only supported on macOS" → `["macos"]`
-   - "only supported on Linux" / "only supported on GTK" → `["linux"]`
-   - "has no effect on macOS" → `["linux", "windows"]`
-   - "has no effect on Linux" → `["macos", "windows"]`
+#### カテゴリ例
 
-3. **デフォルト**（上記にマッチしない）:
-   - `["all"]` - 全プラットフォーム対応
-
-#### カテゴリ分類ルール
-
-意味的に関連する設定をグループ化する。ファイル名プレフィックスは参考程度。
-
-例:
-- `font-family`, `font-size`, `font-style-*` → "Font"
-- `window-width`, `window-height`, `window-position-*` → "Window Size & Position"
-- `window-decoration`, `window-theme`, `window-titlebar-*` → "Window Appearance"
-- `cursor-style`, `cursor-color`, `cursor-opacity` → "Cursor"
-- `macos-*` → "macOS"
-- `gtk-*`, `linux-*` → "Linux / GTK"
-
-既存の category.json があれば、それを参考にしつつ必要に応じて更新する。
+| カテゴリ | 含まれる設定例 |
+|---------|---------------|
+| Font | font-family, font-size, font-style-* |
+| Window Size & Position | window-width, window-height, window-position-* |
+| Window Appearance | window-decoration, window-theme, window-titlebar-* |
+| Cursor | cursor-style, cursor-color, cursor-opacity |
+| Clipboard | clipboard-read, clipboard-write, copy-on-select |
+| Scrollback | scrollback-limit, scroll-* |
+| Shell Integration | shell-integration, shell-integration-features |
+| Background | background, background-opacity, background-image-* |
+| macOS | macos-* |
+| Linux / GTK | gtk-*, linux-* |
+| Keyboard & Input | keybind, input, mouse-* |
+| Quick Terminal | quick-terminal-* |
 
 ### 3. JSON ファイルの出力
 
-出力先: `{docs_dir}/`
+#### platform.json
+
+ダイジェストから platform 情報を抽出して出力:
+
+```json
+{
+  "config/font-family": ["all"],
+  "config/macos-icon": ["macos"],
+  "actions/toggle_secure_input": ["macos"]
+}
+```
 
 #### category.json
 
@@ -89,27 +99,13 @@
 }
 ```
 
-#### platform.json
-
-```json
-{
-  "config/font-family": ["all"],
-  "config/macos-icon": ["macos"],
-  "config/gtk-titlebar": ["linux"],
-  "config/some-feature": ["macos", "windows"],
-  "actions/toggle_secure_input": ["macos"]
-}
-```
-
 ### 4. インデックスファイルの生成
 
-注意: 個別の .en.md ファイル（config/*.en.md, actions/*.en.md）は翻訳ワーカーが生成するため、ここでは生成しない。
-
-以下の4つのインデックスを生成:
+digests.json と category.json を使って以下を生成:
 
 #### index-all.en.md
 
-全項目をカテゴリ別に列挙。
+全項目をカテゴリ別に列挙:
 
 ```markdown
 # Ghostty Configuration Reference
@@ -117,8 +113,8 @@
 ## Configuration Options
 
 ### Font
-- [font-family](config/font-family.en.md) - Font family. Default: `monospace`
-- [font-size](config/font-size.en.md) - Font size in points. Default: `13`
+- [font-family](config/font-family.en.md) - Font family for the terminal
+- [font-size](config/font-size.en.md) - Font size in points
 
 ### Window Size & Position
 - [window-width](config/window-width.en.md) - Initial window width
@@ -133,25 +129,15 @@
 
 #### index-macos.en.md
 
-index-all と同じ構造だが、`"all"` または `"macos"` を含む項目のみを含める。
-- `["all"]` → 含める
-- `["macos"]` → 含める
-- `["macos", "linux"]` → 含める
-- `["linux"]` → 除外
-- `["linux", "windows"]` → 除外
+`"all"` または `"macos"` を含む項目のみ。
 
 #### index-linux.en.md
 
-index-all と同じ構造だが、`"all"` または `"linux"` を含む項目のみを含める。
-- `["all"]` → 含める
-- `["linux"]` → 含める
-- `["macos", "linux"]` → 含める
-- `["macos"]` → 除外
-- `["macos", "windows"]` → 除外
+`"all"` または `"linux"` を含む項目のみ。
 
 #### index-platform-specific.en.md
 
-環境固有機能をプラットフォーム別にまとめる。
+プラットフォーム固有機能をまとめる:
 
 ```markdown
 # Platform-Specific Features
@@ -159,11 +145,7 @@ index-all と同じ構造だが、`"all"` または `"linux"` を含む項目の
 ## macOS Only
 
 ### Configuration Options
-- [macos-icon](config/macos-icon.en.md) - App icon style
-...
-
-### Actions
-- [toggle_secure_input](actions/toggle_secure_input.en.md) - Toggle secure input
+- [macos-icon](config/macos-icon.en.md) - macOS dock icon style
 ...
 
 ## Linux Only
@@ -172,35 +154,19 @@ index-all と同じ構造だが、`"all"` または `"linux"` を含む項目の
 - [gtk-titlebar](config/gtk-titlebar.en.md) - Show GTK titlebar
 ...
 
-### Actions
-- [toggle_window_decorations](actions/toggle_window_decorations.en.md) - Toggle decorations
-...
-
-## Windows Only
-
-### Configuration Options
-（No Windows-specific options currently）
-
-### Actions
-（No Windows-specific actions currently）
-
 ## Cross-Platform
 
 ### Configuration Options
 - [font-family](config/font-family.en.md) - Font family
 ...
-
-### Actions
-- [copy_to_clipboard](actions/copy_to_clipboard.en.md) - Copy selection
-...
 ```
 
-## 出力
+## 出力（重要: コンテキスト節約）
 
-処理完了後、簡潔に報告:
+**レスポンスは1行のみ**:
 ```
-完了:
-- category.json: {カテゴリ数}カテゴリ
-- platform.json: {項目数}項目
-- index-*.en.md: 4件
+完了: cat={カテゴリ数} plat={項目数} idx=4
 ```
+
+- 詳細説明は一切不要
+- ファイル内容は返さない

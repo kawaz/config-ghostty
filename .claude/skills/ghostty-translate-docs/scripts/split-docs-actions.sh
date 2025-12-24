@@ -69,13 +69,13 @@ for f in "$outdir"/*.txt; do
     new_name="$outdir/${action_name}.en.txt"
     if [[ "$f" != "$new_name" ]]; then
       mv "$f" "$new_name"
-      echo "Renamed $(basename "$f") -> ${action_name}.en.txt"
+      # echo "Renamed $(basename "$f") -> ${action_name}.en.txt"
       ((renamed++))
     fi
   else
     # No valid action name found - discard this file
     rm "$f"
-    echo "Discarded $(basename "$f") (invalid block: $first_line)"
+    # echo "Discarded $(basename "$f") (invalid block: $first_line)"
     ((discarded++))
   fi
 done
