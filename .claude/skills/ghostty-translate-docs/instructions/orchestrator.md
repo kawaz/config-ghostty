@@ -7,14 +7,22 @@
 
 ## コンテキスト節約ルール（厳守）
 
-**TaskOutput の戻り値は絶対に読まない。**
+**1. TaskOutput の戻り値は絶対に読まない**
 
 **理由**: TaskOutput にはワーカーの全出力が含まれる可能性があり、これを読むとオーケストレーターのコンテキストが大量に消費される。特に `--verbose` モードでは全ツール呼び出しログが含まれ、8ワーカー × 数万トークンでコンテキストが破綻する。
 
+**2. ポーリング禁止**
+
+**理由**: `sleep` + ファイル存在チェックのループはコンテキストの無駄。バックグラウンドワーカーは完了時に自動で `<agent-notification>` が返される。
+
 **対策**:
-- ワーカーの結果は **結果ファイル** に出力させる
-- オーケストレーターは結果ファイルを **Read ツール** で確認する
-- TaskOutput は完了検知（ポーリングの代替）としてのみ使用し、戻り値は無視する
+- ワーカーの結果は **専用の結果ファイル** に出力させる（1行程度の簡潔な内容）
+- バックグラウンドワーカーの完了は **agent-notification** で検知する（自動通知される）
+- 全ワーカーの完了通知を受け取ったら、結果ファイルを **Read ツール** で確認する
+
+**禁止**:
+- TaskOutput の使用
+- agent-notification の `output-file` を読むこと（ツールログが含まれ、verbose モードでは巨大になる）
 
 ## 設定
 
@@ -84,14 +92,10 @@ result_file={TMP_DIR}/digest-result-{N}.txt
 
 #### 2.2 完了待機と結果確認
 
-1. 全結果ファイルの存在をポーリングで確認:
-```bash
-while [ $(ls {TMP_DIR}/digest-result-*.txt 2>/dev/null | wc -l) -lt {BATCH_COUNT} ]; do sleep 3; done
-```
+1. 全ワーカーの `<agent-notification>` 完了通知を待つ（自動で返される）
+2. 全ワーカー完了後、結果ファイルを Read ツールで確認（各ファイルは1行: `OK: {件数}件`）
 
-2. 結果ファイルを Read ツールで確認（各ファイルは1行: `OK: {件数}件`）
-
-**禁止**: TaskOutput の戻り値を読むこと
+**禁止**: TaskOutput の使用、ポーリング
 
 ### Phase 3: ダイジェストマージ + 分類
 
@@ -129,14 +133,10 @@ result_file={TMP_DIR}/classify-result.txt
 
 #### 3.3 完了待機と結果確認
 
-1. 結果ファイルの存在をポーリングで確認:
-```bash
-while [ ! -f {TMP_DIR}/classify-result.txt ]; do sleep 3; done
-```
+1. ワーカーの `<agent-notification>` 完了通知を待つ（自動で返される）
+2. 完了後、結果ファイルを Read ツールで確認
 
-2. 結果ファイルを Read ツールで確認
-
-**禁止**: TaskOutput の戻り値を読むこと
+**禁止**: TaskOutput の使用、ポーリング
 
 ### Phase 4: 翻訳（並列ワーカー）
 
@@ -163,14 +163,10 @@ result_file={TMP_DIR}/translate-result-{N}.txt
 
 #### 4.2 完了待機と結果確認
 
-1. 全結果ファイルの存在をポーリングで確認:
-```bash
-while [ $(ls {TMP_DIR}/translate-result-*.txt 2>/dev/null | wc -l) -lt {BATCH_COUNT} ]; do sleep 3; done
-```
+1. 全ワーカーの `<agent-notification>` 完了通知を待つ（自動で返される）
+2. 全ワーカー完了後、結果ファイルを Read ツールで確認（各ファイルは1行: `完了:15/15` または `失敗:2/15 ...`）
 
-2. 結果ファイルを Read ツールで確認（各ファイルは1行: `完了:15/15` または `失敗:2/15 ...`）
-
-**禁止**: TaskOutput の戻り値を読むこと
+**禁止**: TaskOutput の使用、ポーリング
 
 ### Phase 5: 結果報告
 

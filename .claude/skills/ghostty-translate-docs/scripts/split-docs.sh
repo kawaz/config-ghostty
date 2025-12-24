@@ -7,7 +7,7 @@
 #   <output_dir>/config/*.en.txt
 #   <output_dir>/actions/*.en.txt
 
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OUTPUT_DIR="${1:?Usage: $0 <output_dir>}"

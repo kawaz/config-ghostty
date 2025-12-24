@@ -11,7 +11,7 @@
 # 4. Each config name gets its own file with the whole block content
 #
 
-set -euo pipefail
+set -uo pipefail
 
 if [[ $# -ne 1 ]]; then
   echo "Usage: $0 <outdir>" >&2
@@ -35,7 +35,7 @@ save_block() {
 
   # Extract all config names from this block
   local config_names
-  config_names=$(echo "$content" | grep -oE '^[a-zA-Z0-9-]+[[:space:]]*=' | sed 's/[[:space:]]*=$//' || true)
+  config_names=$(echo "$content" | grep -oE '^[a-zA-Z0-9-]+[[:space:]]*=' 2>/dev/null | sed 's/[[:space:]]*=$//' || true)
 
   if [[ -z "$config_names" ]]; then
     return

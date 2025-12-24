@@ -19,7 +19,7 @@
 #   0: Success
 #   1: Error
 
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 

@@ -22,7 +22,7 @@
 #   0: Success
 #   1: Error
 
-set -euo pipefail
+set -uo pipefail
 
 if [[ $# -lt 3 ]]; then
     echo "Usage: $0 <new_en_dir> <en_dir> <ja_dir> [--update-en]" >&2

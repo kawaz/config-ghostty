@@ -14,7 +14,7 @@
 # Files without an action name are discarded.
 #
 
-set -euo pipefail
+set -uo pipefail
 
 if [[ $# -ne 1 ]]; then
   echo "Usage: $0 <outdir>" >&2
