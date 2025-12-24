@@ -3,3 +3,6 @@ auto-update-channel = stable
 theme = GitHub Dark
 font-family = HackGen Console NF
 keybind = shift+enter=text:\x1b\r
+
+# スクロールバックのバッファサイズを増やす（default: 10000000 = 10MB）
+scrollback-limit = 200000000
