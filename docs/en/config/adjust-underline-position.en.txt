@@ -1,4 +1,0 @@
-# Distance in pixels or percentage adjustment from the top of the cell to the top of the underline.
-# Increase to move underline DOWN, decrease to move underline UP.
-# See the notes about adjustments in `adjust-cell-width`.
-adjust-underline-position = 

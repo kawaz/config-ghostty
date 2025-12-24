@@ -1,7 +1,0 @@
-toggle_window_float_on_top:
-  Toggle whether the terminal window should always float on top of other
-  windows even when unfocused.
-  
-  Terminal windows always start as normal (not float-on-top) windows.
-  
-  Only implemented on macOS.

@@ -1,5 +1,0 @@
-increase_font_size:
-  Increase the font size by the specified amount in points (pt).
-  
-  For example, `increase_font_size:1.5` will increase the font size
-  by 1.5 points.

@@ -1,5 +1,0 @@
-# ウィンドウタイトルバーの背景色。これは window-theme が ghostty に設定されている場合のみ有効です。
-# 現在、GTK アプリケーションランタイムでのみサポートされています。
-#
-# 16進数形式（`#RRGGBB` または `RRGGBB`）、または X11 の名前付き色で指定します。
-window-titlebar-background =

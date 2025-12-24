@@ -1,2 +1,0 @@
-paste_from_selection:
-  選択クリップボード (selection clipboard) の内容をペーストします。

@@ -1,7 +1,0 @@
-# macOS アプリアイコン内のゴーストの色。
-#
-# 注記: この設定は `macos-icon` が `custom-style` に設定されている場合に
-# 必須です。
-#
-# 16進数形式（`#RRGGBB` または `RRGGBB`）または X11 名前付きカラーで指定します。
-macos-icon-ghost-color =

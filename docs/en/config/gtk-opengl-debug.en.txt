@@ -1,5 +1,0 @@
-# Enable or disable GTK's OpenGL debugging logs. The default is `true` for
-# debug builds, `false` for all others.
-# 
-# Available since: 1.1.0
-gtk-opengl-debug = false

@@ -1,4 +1,0 @@
-show_gtk_inspector:
-  Show the GTK inspector.
-  
-  Has no effect on macOS.

@@ -1,5 +1,0 @@
-unbind:
-  Unbind a previously bound key binding.
-  
-  This cannot unbind bindings that were not bound by Ghostty or the user
-  (e.g. bindings set by the OS or some other application).

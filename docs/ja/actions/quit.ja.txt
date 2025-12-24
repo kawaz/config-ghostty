@@ -1,2 +1,0 @@
-quit:
-  Ghosttyを終了する。

@@ -1,3 +1,0 @@
-# ピクセル単位またはパーセンテージでの打ち消し線の厚さ調整。
-# `adjust-cell-width` の調整についてのノートを参照してください。
-adjust-strikethrough-thickness =

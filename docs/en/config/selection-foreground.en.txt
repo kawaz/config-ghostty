@@ -1,8 +1,0 @@
-# The foreground and background color for selection. If this is not set, then
-# the selection color is just the inverted window background and foreground
-# (note: not to be confused with the cell bg/fg).
-# Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
-# Since version 1.2.0, this can also be set to `cell-foreground` to match
-# the cell foreground color, or `cell-background` to match the cell
-# background color.
-selection-foreground = 

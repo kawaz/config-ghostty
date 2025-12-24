@@ -1,6 +1,0 @@
-text:
-  Send the specified text.
-  
-  Uses Zig string literal syntax. This is currently not validated.
-  If the text is invalid (i.e. contains an invalid escape sequence),
-  the error will currently only show up in logs.

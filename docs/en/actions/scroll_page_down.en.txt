@@ -1,2 +1,0 @@
-scroll_page_down:
-  Scroll the screen down by one page.

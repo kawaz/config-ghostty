@@ -1,2 +1,0 @@
-copy_url_to_clipboard:
-  If there is a URL under the cursor, copy it to the default clipboard.

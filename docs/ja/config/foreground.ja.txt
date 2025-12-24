@@ -1,3 +1,0 @@
-# ウィンドウの前景色。
-# 16進数（`#RRGGBB` または `RRGGBB`）または名前付きX11色として指定します。
-foreground = #ffffff

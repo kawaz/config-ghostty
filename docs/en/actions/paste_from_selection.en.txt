@@ -1,2 +1,0 @@
-paste_from_selection:
-  Paste the contents of the selection clipboard.

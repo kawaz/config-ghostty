@@ -1,4 +1,0 @@
-# Resize the window in discrete increments of the focused surface's cell size.
-# If this is disabled, surfaces are resized in pixel increments. Currently
-# only supported on macOS.
-window-step-resize = false

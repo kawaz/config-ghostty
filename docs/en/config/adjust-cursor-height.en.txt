@@ -1,4 +1,0 @@
-# Height in pixels or percentage adjustment of the cursor. Currently applies to all cursor types:
-# bar, rect, and outlined rect.
-# See the notes about adjustments in `adjust-cell-width`.
-adjust-cursor-height = 

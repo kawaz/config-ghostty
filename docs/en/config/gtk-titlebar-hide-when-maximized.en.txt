@@ -1,5 +1,0 @@
-# If this is `true`, the titlebar will be hidden when the window is maximized,
-# and shown when the titlebar is unmaximized. GTK only.
-# 
-# Available since: 1.1.0
-gtk-titlebar-hide-when-maximized = false

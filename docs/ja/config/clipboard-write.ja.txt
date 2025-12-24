@@ -1,4 +1,0 @@
-clipboard-write = allow
-# クリップボードにコピーされたデータの末尾の空白を削除します。これは
-# `clipboard-write` 経由でクリップボードに送信されるデータには影響しません。
-clipboard-trim-trailing-spaces = true

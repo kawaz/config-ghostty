@@ -1,2 +1,0 @@
-equalize_splits:
-  Equalize the size of all splits in the current window.

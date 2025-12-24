@@ -1,5 +1,0 @@
-# これは Ghostty 起動時に初期ウィンドウを作成するかどうかを制御します。
-# `quit-after-last-window-closed` が `true` で `quit-after-last-window-closed-delay`
-# が設定されている場合、`initial-window` を `false` に設定すると、ウィンドウが作成されない場合
-# に設定された遅延後に Ghostty が終了することになります。Linux と macOS でのみ実装されています。
-initial-window = true
