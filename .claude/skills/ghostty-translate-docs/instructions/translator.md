@@ -55,7 +55,21 @@ def456:config/adjust-cell-width
 1. **グループ内の1つの .en.txt を読み込む**（同じ内容なので1つでよい）
 2. **グループ内の各ファイルについて** .en.md, .ja.txt, .ja.md を生成
 
+### ファイルパスの規則
+
+すべてのファイルは以下の汎用ルールに従う:
+
+- 英語版: `{docs_dir}/en/**/*.en.{txt,md}`
+- 日本語版: `{docs_dir}/ja/**/*.ja.{txt,md}`
+
+例:
+- `en/config/font-family.en.txt` → `ja/config/font-family.ja.txt`
+- `en/config/font-family.en.md` → `ja/config/font-family.ja.md`
+- `en/actions/copy.en.md` → `ja/actions/copy.ja.md`
+
 ### 3. 英語版 .md の生成
+
+英語版 .md は `{docs_dir}/en/` 配下に保存。
 
 #### frontmatter
 
@@ -167,19 +181,19 @@ window-theme = dark
 
 ### 4. 日本語版 .txt の生成
 
-英語版 .en.txt を日本語に翻訳し、`{docs_dir}/ja/{category}/{name}.ja.txt` として保存。
+`en/{path}.en.txt` を日本語に翻訳し、`ja/{path}.ja.txt` として保存。
 
 **注意**: .txt は元の構造をそのまま維持して翻訳する。
 
 ### 5. 日本語版 .md の生成
 
-英語版 .en.md を日本語に翻訳し、`{docs_dir}/ja/{category}/{name}.ja.md` として保存。
+`en/{path}.en.md` を日本語に翻訳し、`ja/{path}.ja.md` として保存。
 
 - **frontmatter の description**: digests.json の description を日本語に翻訳
-- **リンク先**: `.en.md` → `.ja.md` に変更
+- **リンク先**: `{path}.en.md` → `{path}.ja.md` に変更
 - **コードブロック内コメント**: 日本語に翻訳
 - **ドキュメントURL**: GitHub リポジトリ内の日本語ドキュメントへ
-  `# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/config/{name}.ja.md`
+  `# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/{path}.ja.md`
 
 ## 翻訳時の注意
 

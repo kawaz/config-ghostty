@@ -38,7 +38,7 @@ Phase 2: ダイジェスト生成（並列ワーカー）
     ↓
 Phase 3: ダイジェストマージ + 分類（1ワーカー）
     ↓
-Phase 4: 翻訳（並列ワーカー）
+Phase 4: 翻訳 + インデックス翻訳（並列ワーカー）
     ↓
 Phase 5: 結果報告
 ```
@@ -138,7 +138,9 @@ result_file={TMP_DIR}/classify-result.txt
 
 **禁止**: TaskOutput の使用、ポーリング
 
-### Phase 4: 翻訳（並列ワーカー）
+### Phase 4: 翻訳 + インデックス翻訳（並列ワーカー）
+
+翻訳ワーカーとインデックス翻訳ワーカーを **同時に** 起動する。
 
 #### 4.1 翻訳ワーカーを並列起動
 
@@ -161,10 +163,31 @@ digests_file={TMP_DIR}/digests.json
 result_file={TMP_DIR}/translate-result-{N}.txt
 ```
 
-#### 4.2 完了待機と結果確認
+#### 4.2 インデックス翻訳ワーカーを起動（4.1 と同時）
 
-1. 全ワーカーの `<agent-notification>` 完了通知を待つ（自動で返される）
-2. 全ワーカー完了後、結果ファイルを Read ツールで確認（各ファイルは1行: `完了:15/15` または `失敗:2/15 ...`）
+**1つ** のワーカーをバックグラウンドで起動（翻訳ワーカーと並列）:
+
+```
+Task ツールを使用:
+- subagent_type: general-purpose
+- model: haiku
+- run_in_background: true
+- prompt:
+```
+
+プロンプト:
+```
+${SKILL_DIR}/instructions/index-translator.md を読んで実行。
+docs_dir={DOCS_DIR}
+result_file={TMP_DIR}/index-translate-result.txt
+```
+
+#### 4.3 完了待機と結果確認
+
+1. 全ワーカー（翻訳 + インデックス翻訳）の `<agent-notification>` 完了通知を待つ
+2. 全ワーカー完了後、結果ファイルを Read ツールで確認
+   - 翻訳: `完了:15/15` または `失敗:2/15 ...`
+   - インデックス: `完了:4/4` または `スキップ:更新なし`
 
 **禁止**: TaskOutput の使用、ポーリング
 
@@ -179,11 +202,14 @@ result_file={TMP_DIR}/translate-result-{N}.txt
 ## 分類結果
 - category.json: {カテゴリ数}カテゴリ
 - platform.json: {項目数}項目
-- index-*.en.md: 4件
+- en/index-*.en.md: 4件
 
 ## 翻訳結果
 - 成功: {件数}件
 - 失敗: {件数}件（あれば詳細）
+
+## インデックス翻訳結果
+- ja/index-*.ja.md: {件数}件（またはスキップ）
 
 ### 翻訳ファイル一覧
 - config/xxx

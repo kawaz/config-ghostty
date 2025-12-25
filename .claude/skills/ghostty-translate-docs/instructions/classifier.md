@@ -102,9 +102,9 @@ description とファイル名から、意味的に関連する設定をグル�
 
 ### 4. インデックスファイルの生成
 
-digests.json と category.json を使って以下を生成:
+digests.json と category.json を使って `{docs_dir}/en/` 配下に以下を生成:
 
-#### index-all.en.md
+#### en/index-all.en.md
 
 全項目をカテゴリ別に列挙:
 
@@ -128,15 +128,15 @@ digests.json と category.json を使って以下を生成:
 ...
 ```
 
-#### index-macos.en.md
+#### en/index-macos.en.md
 
 `"all"` または `"macos"` を含む項目のみ。
 
-#### index-linux.en.md
+#### en/index-linux.en.md
 
 `"all"` または `"linux"` を含む項目のみ。
 
-#### index-platform-specific.en.md
+#### en/index-platform-specific.en.md
 
 プラットフォーム固有機能をまとめる:
 
