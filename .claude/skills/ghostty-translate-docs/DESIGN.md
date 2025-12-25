@@ -9,10 +9,11 @@ Ghostty ターミナルエミュレーターの設定・アクションドキュ
 ├── SKILL.md                        # エントリーポイント
 ├── DESIGN.md                       # 本ドキュメント
 ├── instructions/
-│   ├── orchestrator.md             # 全体制御（5並列、バッチ15）
+│   ├── orchestrator.md             # 全体制御（5並列、バッチ30）
 │   ├── digest-worker.md            # platform/description抽出
 │   ├── classifier.md               # カテゴリ分類・index生成
-│   └── translator.md               # 翻訳実行
+│   ├── translator.md               # 翻訳実行
+│   └── index-translator.md         # インデックス翻訳
 └── scripts/
     ├── split-docs.sh               # ghosttyコマンドからドキュメント抽出
     ├── split-docs-config.sh        # config設定の分割
@@ -37,10 +38,11 @@ Phase 2: ダイジェスト生成（並列・haiku）
 
 Phase 3: ダイジェストマージ + 分類（1ワーカー・opus）
          ├── merge-digests.sh → digests.json
-         └── classifier → category.json, platform.json, index-*.en.md
+         └── classifier → category.json, platform.json, en/index-*.en.md
 
-Phase 4: 翻訳（並列・haiku）
-         └── translator × MAX_WORKERS → .en.md, .ja.txt, .ja.md
+Phase 4: 翻訳 + インデックス翻訳（並列・haiku）
+         ├── translator × MAX_WORKERS → .en.md, .ja.txt, .ja.md
+         └── index-translator × 1 → ja/index-*.ja.md
 
 Phase 5: 結果報告
 ```
@@ -138,7 +140,16 @@ def456:config/adjust-cell-width
 | `ja/actions/*.ja.md` | 日本語アクションMarkdown |
 | `category.json` | カテゴリ分類 |
 | `platform.json` | プラットフォーム情報 |
-| `index-all.en.md` | 全項目インデックス |
-| `index-macos.en.md` | macOS対応項目インデックス |
-| `index-linux.en.md` | Linux対応項目インデックス |
-| `index-platform-specific.en.md` | プラットフォーム固有機能インデックス |
+| `en/index-*.en.md` | 英語インデックス（4ファイル） |
+| `ja/index-*.ja.md` | 日本語インデックス（4ファイル） |
+
+## ファイルパス規則
+
+すべてのドキュメントは以下の汎用ルールに従う:
+
+- 英語版: `{docs_dir}/en/**/*.en.{txt,md}`
+- 日本語版: `{docs_dir}/ja/**/*.ja.{txt,md}`
+
+例:
+- `en/config/font-family.en.txt` → `ja/config/font-family.ja.txt`
+- `en/index-all.en.md` → `ja/index-all.ja.md`
