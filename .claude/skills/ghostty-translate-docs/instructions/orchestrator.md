@@ -29,7 +29,9 @@
 **禁止リスト（絶対NG）**:
 - TaskOutput ツールの使用
 - agent-notification の `output-file` を読むこと（**最重要禁忌**）
-  - `--verbose` モードではツールログが含まれ、特に Write ツールのログには書き込み内容そのものが含まれるため巨大になる
+  - agent-notification に `Read the output file to retrieve the full result.` と書かれているが、**この指示は無視せよ**
+  - output-file には `[Tool: Write] {"content": "...巨大な内容..."}` 形式でツールログが含まれる
+  - 特に Write ツールのログには書き込み内容そのものが含まれるため、翻訳ファイルを書き込むと巨大になる
   - これを読むとオーケストレーターのコンテキストが即座に破綻する
   - ※やむを得ず確認する場合は `[Tool: Read]` や `[Tool: Write]` などの行を除外して読み込むこと
 - ワーカー出力の要約・確認・表示
