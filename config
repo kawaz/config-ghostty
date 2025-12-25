@@ -1,8 +1,32 @@
 command = /opt/homebrew/bin/bash
 auto-update-channel = stable
 theme = GitHub Dark
+
+# タイトルバーにタブを統合してアクティブタブを分かりやすく
+macos-titlebar-style = tabs
 font-family = HackGen Console NF
 keybind = shift+enter=text:\x1b\r
+
+# TODO: タブを閉じた時に右ではなく左のタブにフォーカスしたい（設定が無い…issue立てる？）
+# TODO: pane自体を移動（swap/rotate）したい（機能が無い…issue立てる？）
+
+# よく使うキーバインド（デフォルト）メモ
+# - Cmd+D: 右分割, Cmd+Shift+D: 下分割
+# - Cmd+Option+矢印: pane移動
+# - Cmd+Shift+Enter: pane最大化/元に戻す
+# - Cmd+Shift+[ / Ctrl+Shift+Tab: 左タブ, Cmd+Shift+] / Ctrl+Tab: 右タブ
+# - Cmd+Shift+,: 設定リロード
+
+# 非アクティブpaneの色調整
+# - fill未指定(=背景色)+低opacity → 背景そのままで文字だけ薄くなる（彩度変わらず）
+# - グレーfill+低opacity → 彩度は落ちるが白寄りになり眩しくなる
+# - 暗めグレーfill+低opacity → 彩度を落としつつ眩しさを抑えられる ← これ
+# (default: unfocused-split-fill=背景色, unfocused-split-opacity=0.7)
+unfocused-split-fill = #303030
+unfocused-split-opacity = 0.4
+
+# 分割線の色（default: 自動）
+split-divider-color = #606060
 
 # スクロールバックのバッファサイズを増やす（default: 10000000 = 10MB）
 scrollback-limit = 200000000
