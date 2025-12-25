@@ -102,7 +102,32 @@ description とファイル名から、意味的に関連する設定をグル�
 
 ### 4. インデックスファイルの生成
 
-digests.json と category.json を使って `{docs_dir}/en/` 配下に以下を生成:
+digests.json と category.json を使って `{docs_dir}/en/` 配下に以下を生成。
+
+#### 共通ヘッダー
+
+全てのインデックスファイルには以下のヘッダーを含める:
+
+```markdown
+# {タイトル}
+
+**Language:** English | [日本語]({対応する.ja.mdへの相対パス})
+
+**Platform Index:** [All](index-all.en.md) | [macOS](index-macos.en.md) | [Linux](index-linux.en.md) | [Platform-Specific](index-platform-specific.en.md)
+
+---
+```
+
+例（index-all.en.md の場合）:
+```markdown
+# Ghostty Configuration Reference
+
+**Language:** English | [日本語](../ja/index-all.ja.md)
+
+**Platform Index:** All | [macOS](index-macos.en.md) | [Linux](index-linux.en.md) | [Platform-Specific](index-platform-specific.en.md)
+
+---
+```
 
 #### en/index-all.en.md
 
@@ -110,6 +135,12 @@ digests.json と category.json を使って `{docs_dir}/en/` 配下に以下を�
 
 ```markdown
 # Ghostty Configuration Reference
+
+**Language:** English | [日本語](../ja/index-all.ja.md)
+
+**Platform Index:** All | [macOS](index-macos.en.md) | [Linux](index-linux.en.md) | [Platform-Specific](index-platform-specific.en.md)
+
+---
 
 ## Configuration Options
 
@@ -142,6 +173,12 @@ digests.json と category.json を使って `{docs_dir}/en/` 配下に以下を�
 
 ```markdown
 # Platform-Specific Features
+
+**Language:** English | [日本語](../ja/index-platform-specific.ja.md)
+
+**Platform Index:** [All](index-all.en.md) | [macOS](index-macos.en.md) | [Linux](index-linux.en.md) | Platform-Specific
+
+---
 
 ## macOS Only
 

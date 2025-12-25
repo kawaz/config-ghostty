@@ -82,10 +82,25 @@ default: {デフォルト値}
 
 platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "linux"]` → `macos, linux`
 
+#### 言語切替リンク
+
+タイトルの直後に言語切替リンクを含める:
+
+```markdown
+# {config-name}
+
+**Language:** English | [日本語](../../ja/config/{config-name}.ja.md)
+
+{説明文}
+...
+```
+
 #### config の構造
 
 ```markdown
 # {config-name}
+
+**Language:** English | [日本語](../../ja/config/{config-name}.ja.md)
 
 {説明文}
 
@@ -113,6 +128,8 @@ platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "li
 ```markdown
 # {action_name}
 
+**Language:** English | [日本語](../../ja/actions/{action_name}.ja.md)
+
 {説明文}
 ```
 
@@ -126,6 +143,7 @@ platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "li
 `en/{path}.en.md` を日本語に翻訳し、`ja/{path}.ja.md` として保存。
 
 - **frontmatter の description**: 日本語に翻訳
+- **言語切替リンク**: `English | [日本語](...)`→ `[English](../../en/.../.en.md) | 日本語` に変更
 - **リンク先**: `{path}.en.md` → `{path}.ja.md` に変更
 - **コードブロック内コメント**: 日本語に翻訳
 - **ドキュメントURL**: `# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/{path}.ja.md`

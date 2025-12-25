@@ -59,6 +59,26 @@
 例:
 - `en/index-all.en.md` → `ja/index-all.ja.md`
 
+### ヘッダーの変換
+
+英語版の共通ヘッダーを日本語版用に変換:
+
+英語版:
+```markdown
+**Language:** English | [日本語](../ja/index-all.ja.md)
+
+**Platform Index:** All | [macOS](index-macos.en.md) | [Linux](index-linux.en.md) | [Platform-Specific](index-platform-specific.en.md)
+```
+
+日本語版:
+```markdown
+**Language:** [English](../en/index-all.en.md) | 日本語
+
+**Platform Index:** [すべて](index-all.ja.md) | [macOS](index-macos.ja.md) | [Linux](index-linux.ja.md) | [プラットフォーム固有](index-platform-specific.ja.md)
+```
+
+現在のページに該当する項目はリンクにせずプレーンテキストにする。
+
 ### リンクの変換
 
 インデックス内のリンクはファイル名部分のみ変換:

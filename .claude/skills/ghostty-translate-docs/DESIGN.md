@@ -4,6 +4,8 @@ Ghostty ターミナルエミュレーターの設定・アクションドキュ
 
 ## ディレクトリ構成
 
+### スキル
+
 ```
 .claude/skills/ghostty-translate-docs/
 ├── SKILL.md                        # エントリーポイント
@@ -23,6 +25,29 @@ Ghostty ターミナルエミュレーターの設定・アクションドキュ
     ├── get-ghostty-config-dir.sh   # 設定ディレクトリ取得
     └── merge-digests.sh            # ダイジェストJSONマージ
 ```
+
+### 出力（docs）
+
+```
+docs/
+├── category.json                   # カテゴリ分類
+├── platform.json                   # プラットフォーム情報
+├── en/                             # 英語版
+│   ├── index-all.en.md             # 全項目インデックス
+│   ├── index-macos.en.md           # macOS向けインデックス
+│   ├── index-linux.en.md           # Linux向けインデックス
+│   ├── index-platform-specific.en.md  # プラットフォーム固有機能
+│   ├── config/
+│   │   ├── *.en.txt                # 英語設定ドキュメント（元データ）
+│   │   └── *.en.md                 # 英語設定Markdown
+│   └── actions/*.en.{txt,md}       # アクション（config/ と同構造）
+└── ja/**/*.ja.{txt,md}             # 日本語版（en/ と同構造）
+```
+
+### 翻訳確認用リンク
+
+- 英語版: [docs/en/index-all.en.md](../../../docs/en/index-all.en.md)
+- 日本語版: [docs/ja/index-all.ja.md](../../../docs/ja/index-all.ja.md)
 
 ## 処理フロー
 
