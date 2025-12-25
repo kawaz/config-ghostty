@@ -2,15 +2,7 @@
 
 このエージェントは指定されたファイルリストの翻訳と Markdown 生成を担当する。
 
-## 翻訳方法（最重要）
-
-あなたは AI（Claude）である。翻訳は **あなた自身の言語能力** で行うこと。
-
-1. Read ツールで英語ファイルを読み込む
-2. **あなた自身が内容を理解し、自然な日本語に翻訳する**
-3. Write ツールで日本語ファイルを書き出す
-
-## 絶対禁止事項
+## 禁止事項
 
 以下は **絶対にやってはいけない**:
 
@@ -19,19 +11,25 @@
 - **翻訳マッピング辞書やテンプレートを作成すること**
 - **簡易的な置換処理で翻訳を済ませること**
 
-これらは禁止であり、見つけ次第やり直しになる。
-
 ファイル操作には必ず **Read ツール**と **Write ツール**を使用すること。
+
+## 翻訳方法
+
+あなたは AI（Claude）である。翻訳は **あなた自身の言語能力** で行うこと。
+
+1. Read ツールで英語ファイルを読み込む
+2. **あなた自身が内容を理解し、自然な日本語に翻訳する**
+3. Write ツールで日本語ファイルを書き出す
 
 ## 入力
 
-呼び出し元から以下の情報を受け取る：
+呼び出し元から以下を受け取る:
 - `docs_dir`: ドキュメントディレクトリ
 - `batch_file`: バッチファイルパス（例: `{TMP}/batch-1.txt`）
 - `digests_file`: ダイジェストJSONパス（例: `{TMP}/digests.json`）
 - `result_file`: 結果報告ファイルパス（例: `{TMP}/translate-result-1.txt`）
 
-バッチファイルは `group_key:category/name` 形式:
+バッチファイル形式（`group_key:category/name`）:
 ```
 abc123:config/font-size
 def456:config/adjust-cell-height
@@ -39,6 +37,19 @@ def456:config/adjust-cell-width
 ```
 
 同じグループキーを持つファイルは関連設定（同じコメントブロックを共有）。
+
+## ファイルパス規則
+
+すべてのファイルは汎用ルールに従う:
+
+- 英語版: `{docs_dir}/en/**/*.en.{txt,md}`
+- 日本語版: `{docs_dir}/ja/**/*.ja.{txt,md}`
+
+例:
+- `en/config/font-family.en.txt` → `ja/config/font-family.ja.txt`
+- `en/config/font-family.en.md` → `ja/config/font-family.ja.md`
+
+---
 
 ## 処理手順
 
@@ -55,25 +66,11 @@ def456:config/adjust-cell-width
 1. **グループ内の1つの .en.txt を読み込む**（同じ内容なので1つでよい）
 2. **グループ内の各ファイルについて** .en.md, .ja.txt, .ja.md を生成
 
-### ファイルパスの規則
-
-すべてのファイルは以下の汎用ルールに従う:
-
-- 英語版: `{docs_dir}/en/**/*.en.{txt,md}`
-- 日本語版: `{docs_dir}/ja/**/*.ja.{txt,md}`
-
-例:
-- `en/config/font-family.en.txt` → `ja/config/font-family.ja.txt`
-- `en/config/font-family.en.md` → `ja/config/font-family.ja.md`
-- `en/actions/copy.en.md` → `ja/actions/copy.ja.md`
-
 ### 3. 英語版 .md の生成
 
 英語版 .md は `{docs_dir}/en/` 配下に保存。
 
 #### frontmatter
-
-digests.json から description を取得して使用:
 
 ```yaml
 ---
@@ -83,117 +80,87 @@ default: {デフォルト値}
 ---
 ```
 
-platform の変換:
-- `["all"]` → `all`
-- `["macos"]` → `macos`
-- `["linux"]` → `linux`
-- `["macos", "linux"]` → `macos, linux`
+platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "linux"]` → `macos, linux`
 
-#### config の Markdown 構造
+#### config の構造
 
 ```markdown
----
-description: {description}
-platform: {platform}
-default: {デフォルト値}
----
-
 # {config-name}
 
-{説明文（コメント行から抽出、# を除去）}
+{説明文}
 
 ## Default
 
 ```conf
 # {説明コメント} (default: {デフォルト値})
 {config-name} = {デフォルト値}
-```
+\```
 
 ## Examples
 
 ```conf
-# {説明1}
-{config-name} = {値1}
-
-# {説明2}
-{config-name} = {値2}
-```
+# {説明}
+{config-name} = {値}
+\```
 
 ## Related
 
 - [{related-config}]({related-config}.en.md) - 関連説明
 ```
 
-#### actions の Markdown 構造
+#### actions の構造
 
 ```markdown
----
-description: {description}
-platform: {platform}
----
-
 # {action_name}
 
 {説明文}
 ```
 
-### Markdown 生成のルール
+### 4. 日本語版 .txt の生成
 
-#### デフォルト値と設定例
+`en/{path}.en.txt` を日本語に翻訳し、`ja/{path}.ja.txt` として保存。
+元の構造をそのまま維持して翻訳する。
 
-- **コピペ可能な形式**で表示する
-- 2行コメント形式:
-  1. ドキュメントへのリンク
-  2. 1行説明 + (default: デフォルト値)
+### 5. 日本語版 .md の生成
 
-形式:
+`en/{path}.en.md` を日本語に翻訳し、`ja/{path}.ja.md` として保存。
+
+- **frontmatter の description**: 日本語に翻訳
+- **リンク先**: `{path}.en.md` → `{path}.ja.md` に変更
+- **コードブロック内コメント**: 日本語に翻訳
+- **ドキュメントURL**: `# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/{path}.ja.md`
+
+---
+
+## Markdown 生成ルール
+
+### デフォルト値と設定例
+
+コピペ可能な形式で表示。2行コメント形式:
+
 ```conf
 # https://ghostty.org/docs/config/reference#{config-name}
 # {1行説明} (default: {デフォルト値})
 {config-name} = {値}
 ```
 
-#### enum 型の設定
+### enum 型の設定
 
-全ての有効な値をコピペ可能な形式で提示:
+全ての有効な値をコピペ可能な形式で提示。
 
-```conf
-# https://ghostty.org/docs/config/reference#window-theme
-# Use system theme (default: auto)
-window-theme = auto
-
-# https://ghostty.org/docs/config/reference#window-theme
-# Always use dark theme (default: auto)
-window-theme = dark
-```
-
-#### 数値型で桁が大きい設定
+### 数値型で桁が大きい設定
 
 人間が読みやすい形式でコメント（例: `10000000` → `10MB`）。
 
-#### 関連設定への参照
+### 関連設定への参照
 
 `xxx-height` が「詳細は `xxx-width` を見ろ」と言っている場合:
 
-1. width の説明を引用または良い感じにマージした説明文にする
+1. width の説明を引用またはマージした説明文にする
 2. オリジナルの説明は `<details>` で隠す
 3. 関連設定へのリンクを相互に設ける
 
-### 4. 日本語版 .txt の生成
-
-`en/{path}.en.txt` を日本語に翻訳し、`ja/{path}.ja.txt` として保存。
-
-**注意**: .txt は元の構造をそのまま維持して翻訳する。
-
-### 5. 日本語版 .md の生成
-
-`en/{path}.en.md` を日本語に翻訳し、`ja/{path}.ja.md` として保存。
-
-- **frontmatter の description**: digests.json の description を日本語に翻訳
-- **リンク先**: `{path}.en.md` → `{path}.ja.md` に変更
-- **コードブロック内コメント**: 日本語に翻訳
-- **ドキュメントURL**: GitHub リポジトリ内の日本語ドキュメントへ
-  `# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/{path}.ja.md`
+---
 
 ## 翻訳時の注意
 
@@ -202,35 +169,27 @@ window-theme = dark
 - 設定名やコード例の値はそのまま維持
 - Markdown のリンク構造を維持
 
+---
+
 ## 出力
-
-### 翻訳品質について
-
-- 翻訳は妥協せず完璧に行うこと
-- 自然で読みやすい日本語にすること
-- 技術的正確性を維持すること
 
 ### 結果ファイル
 
 処理完了後、`result_file` に結果を書き出す:
 
-成功時:
 ```
 完了:15/15
 ```
 
-失敗時:
+または
+
 ```
 失敗:2/15 config/foo config/bar
 ```
 
-Write ツールで `result_file` に書き込むこと。
-
 ### レスポンス（厳守）
 
 **レスポンスは最小限にすること。**
-
-**理由**: ワーカーの出力はオーケストレーターのコンテキストに流入するため、最小限にする必要がある。
 
 **禁止事項**:
 - 翻訳内容をレスポンスに含めない
