@@ -209,4 +209,4 @@ def456:config/adjust-cell-width
 
 ## 補足
 
-Claude Code では `/ghostty-translate-docs-shorthand` でもスキルを呼び出せる（Claude Code 固有機能）。
+Claude Code では [`/ghostty-translate-docs-shorthand`](../../commands/ghostty-translate-docs-shorthand.md) でもスキルを呼び出せる（Claude Code 固有機能）。
