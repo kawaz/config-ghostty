@@ -5,24 +5,34 @@
 呼び出し元から `SKILL_DIR` を受け取っていること。
 すべてのスクリプトと指示書は `${SKILL_DIR}/...` で参照する。
 
-## コンテキスト節約ルール（厳守）
+## コンテキスト節約ルール（厳守・破ると即セッション破綻）
 
 **1. TaskOutput の戻り値は絶対に読まない**
 
 **理由**: TaskOutput にはワーカーの全出力が含まれる可能性があり、これを読むとオーケストレーターのコンテキストが大量に消費される。特に `--verbose` モードでは全ツール呼び出しログが含まれ、8ワーカー × 数万トークンでコンテキストが破綻する。
 
-**2. ポーリング禁止**
+**2. agent-notification の Response は読まない・処理しない**
+
+**理由**: ワーカーの最終レスポンスが agent-notification に含まれる。ワーカーが誤って翻訳内容などをレスポンスに含めると、これが自動でオーケストレーターに流入しコンテキストを破壊する。
+
+**3. ポーリング禁止**
 
 **理由**: `sleep` + ファイル存在チェックのループはコンテキストの無駄。バックグラウンドワーカーは完了時に自動で `<agent-notification>` が返される。
 
 **対策**:
 - ワーカーの結果は **専用の結果ファイル** に出力させる（1行程度の簡潔な内容）
 - バックグラウンドワーカーの完了は **agent-notification** で検知する（自動通知される）
+- agent-notification を受け取ったら、**その内容（Response部分）は一切読まずに無視**する
 - 全ワーカーの完了通知を受け取ったら、結果ファイルを **Read ツール** で確認する
+- agent-notification は「完了した」という事実のみを利用し、中身は使わない
 
-**禁止**:
-- TaskOutput の使用
-- agent-notification の `output-file` を読むこと（ツールログが含まれ、verbose モードでは巨大になる）
+**禁止リスト（絶対NG）**:
+- TaskOutput ツールの使用
+- agent-notification の `output-file` を読むこと（**最重要禁忌**）
+  - `--verbose` モードではツールログが含まれ、特に Write ツールのログには書き込み内容そのものが含まれるため巨大になる
+  - これを読むとオーケストレーターのコンテキストが即座に破綻する
+  - ※やむを得ず確認する場合は `[Tool: Read]` や `[Tool: Write]` などの行を除外して読み込むこと
+- ワーカー出力の要約・確認・表示
 
 ## 設定
 
@@ -40,7 +50,9 @@ Phase 3: ダイジェストマージ + 分類（1ワーカー）
     ↓
 Phase 4: 翻訳 + インデックス翻訳（並列ワーカー）
     ↓
-Phase 5: 結果報告
+Phase 5: 品質確認（並列ワーカー）
+    ↓
+Phase 6: 結果報告
 ```
 
 ## 手順
@@ -191,7 +203,59 @@ result_file={TMP_DIR}/index-translate-result.txt
 
 **禁止**: TaskOutput の使用、ポーリング
 
-### Phase 5: 結果報告
+### Phase 5: 品質確認（並列ワーカー）
+
+翻訳完了後、ファイル完全性とリンク有効性を確認する。
+
+#### 5.1 品質確認ワーカーを並列起動
+
+**2つ** のワーカーをバックグラウンドで起動:
+
+英語チェック:
+```
+Task ツールを使用:
+- subagent_type: general-purpose
+- model: haiku
+- run_in_background: true
+- prompt:
+```
+
+プロンプト:
+```
+${SKILL_DIR}/instructions/quality-checker.md を読んで実行。
+docs_dir={DOCS_DIR}
+check_type=en
+result_file={TMP_DIR}/quality-check-en.txt
+```
+
+日本語チェック:
+```
+Task ツールを使用:
+- subagent_type: general-purpose
+- model: haiku
+- run_in_background: true
+- prompt:
+```
+
+プロンプト:
+```
+${SKILL_DIR}/instructions/quality-checker.md を読んで実行。
+docs_dir={DOCS_DIR}
+check_type=ja
+digests_file={TMP_DIR}/digests.json
+result_file={TMP_DIR}/quality-check-ja.txt
+```
+
+#### 5.2 完了待機と結果確認
+
+1. 両ワーカーの `<agent-notification>` 完了通知を待つ
+2. 完了後、結果ファイルを Read ツールで確認
+   - `OK: files=...` なら問題なし
+   - `ISSUES:` で始まる場合は問題あり
+
+**禁止**: TaskOutput の使用、ポーリング
+
+### Phase 6: 結果報告
 
 全ワーカーの報告を集約して簡潔に報告:
 
@@ -210,6 +274,11 @@ result_file={TMP_DIR}/index-translate-result.txt
 
 ## インデックス翻訳結果
 - ja/index-*.ja.md: {件数}件（またはスキップ）
+
+## 品質確認結果
+- 英語: OK または ISSUES あり
+- 日本語: OK または ISSUES あり
+（問題がある場合は詳細を報告）
 
 ### 翻訳ファイル一覧
 - config/xxx

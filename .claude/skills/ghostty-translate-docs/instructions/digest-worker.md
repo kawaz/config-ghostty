@@ -40,7 +40,8 @@ def456:config/adjust-cell-width
 
 各グループについて:
 1. **グループ内の1つの .en.txt を読み込む**（同じ内容なので1つでよい）
-2. **グループ内の全ファイルに同じ platform と description を割り当て**
+2. **グループ内の各ファイルに固有の description を生成**（後述）
+3. **platform は共通で割り当て**
 
 #### platform 判定ルール
 
@@ -58,18 +59,46 @@ def456:config/adjust-cell-width
 
 3. **デフォルト**: `["all"]`
 
-#### description 抽出ルール
+#### description 生成ルール
 
-ファイル内容から1行の英語説明を抽出:
+**重要**: コメントの最初の1行をそのまま使うのではなく、AIとして内容を理解し、設定ごとに適切な説明を**生成**する。
 
-1. コメント行（`#` で始まる行）から最初の説明文を取得
-2. 設定の目的・機能を簡潔に表す1文（50文字程度）
-3. 技術的詳細やデフォルト値は含めない
+##### 生成の基準
 
-例:
+1. **コメント全体を読む**（`#` で始まる行すべて）
+2. **設定名に応じた説明を生成**:
+   - リファレンスインデックスに適した端的な説明
+   - 「何をする設定か」「何のためのアクションか」を一言で
+   - **条件・例外・デフォルト値は含めない**
+   - 40-60文字程度の英語
+
+##### グループ内で固有の説明を生成
+
+同じコメントを共有するグループでも、**各設定名に応じた固有の説明**を生成する:
+
+| 設定名 | 正しい description |
+|--------|-------------------|
+| `font-family` | "Font family for the terminal" |
+| `font-family-bold` | "Font family for bold text" |
+| `font-family-italic` | "Font family for italic text" |
+| `window-width` | "Initial window width" |
+| `window-height` | "Initial window height" |
+| `adjust-cell-width` | "Adjust cell width for character alignment" |
+| `adjust-cell-height` | "Adjust cell height for character alignment" |
+
+##### 良い例
+
+- `clipboard-paste-protection` → "Require confirmation before pasting unsafe text"
+- `cursor-color` → "The color of the cursor"
 - `font-family` → "Font family for the terminal"
-- `window-width` → "Initial window width in cells or pixels"
 - `copy_to_clipboard` → "Copy selection to system clipboard"
+
+##### 悪い例（避けるべき）
+
+- ❌ "Require confirmation before pasting text that appears unsafe. This helps prevent a..." → 途中で切れている
+- ❌ "The color of the cursor (default will be chosen if not set)" → 括弧内の条件は不要
+- ❌ "Font family for the terminal. Multiple fonts can be specified..." → 詳細すぎる
+- ❌ 同じグループ内の全ファイルに同一の説明 → 各設定名に固有の説明が必要
 
 ### 3. 結果をJSONで出力
 

@@ -66,6 +66,22 @@ def456:config/adjust-cell-width
 1. **グループ内の1つの .en.txt を読み込む**（同じ内容なので1つでよい）
 2. **グループ内の各ファイルについて** .en.md, .ja.txt, .ja.md を生成
 
+#### 重要: グループ内で固有のコンテンツを生成
+
+同じコメントブロックを共有するグループ（例: `font-*`, `window-width/height`）でも、
+**各設定ファイルには、その設定名に応じた固有のコンテンツ**を生成する。
+
+- `.txt` ファイル: 元の英語コメントの翻訳なので同じ内容でも可
+- `.md` ファイル: **設定名に応じた説明・例・タイトル**にカスタマイズする
+
+例:
+| 設定名 | .md のタイトルと説明 |
+|--------|---------------------|
+| `window-width` | "Initial window width" - 幅に関する説明と例 |
+| `window-height` | "Initial window height" - 高さに関する説明と例 |
+| `font-family` | "Font family for the terminal" - 基本フォントの説明 |
+| `font-family-bold` | "Font family for bold text" - 太字フォントの説明 |
+
 ### 3. 英語版 .md の生成
 
 英語版 .md は `{docs_dir}/en/` 配下に保存。

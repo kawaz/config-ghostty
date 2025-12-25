@@ -74,13 +74,28 @@ detect_category() {
             old_hash=$(compute_hash "$en_file")
         fi
 
+        # Additional paths for .md files
+        local en_md_file="$en_dir/${name}.en.md"
+        local ja_md_file="$ja_dir/${name}.ja.md"
+
         # Determine if translation needed
+        # Translation is required if ANY of these conditions is true:
+        # 1. .ja.txt doesn't exist
+        # 2. Content changed (.en.txt hash differs)
+        # 3. .en.md doesn't exist
+        # 4. .ja.md doesn't exist
         local needs_translation=false
         if [[ ! -f "$ja_file" ]]; then
             # No Japanese translation exists
             needs_translation=true
         elif [[ "$new_hash" != "$old_hash" ]]; then
             # Content changed
+            needs_translation=true
+        elif [[ ! -f "$en_md_file" ]]; then
+            # English markdown doesn't exist
+            needs_translation=true
+        elif [[ ! -f "$ja_md_file" ]]; then
+            # Japanese markdown doesn't exist
             needs_translation=true
         fi
 
