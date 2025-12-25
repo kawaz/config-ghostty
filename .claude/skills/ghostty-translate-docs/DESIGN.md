@@ -204,3 +204,9 @@ def456:config/adjust-cell-width
 4. **ドキュメントの推敲**: セクション構成・順番・重要度が適切か、冗長な記述がないか
 
 整合性が取れていないと、将来の改修時に混乱を招く。
+
+---
+
+## 補足
+
+Claude Code では `/ghostty-translate-docs-shorthand` でもスキルを呼び出せる（Claude Code 固有機能）。
