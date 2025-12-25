@@ -21,7 +21,6 @@ Ghostty ターミナルエミュレーターの設定・アクションドキュ
     ├── detect-changes.sh           # 変更検出（ハッシュ比較）
     ├── prepare-translation.sh      # バッチファイル作成
     ├── get-ghostty-config-dir.sh   # 設定ディレクトリ取得
-    ├── launch-orchestrator.sh      # バックグラウンド起動
     └── merge-digests.sh            # ダイジェストJSONマージ
 ```
 
