@@ -1,0 +1,31 @@
+---
+description: Undo the last undoable action for the focused surface
+platform: macos
+default: N/A
+---
+
+# undo
+
+**Language:** English | [日本語](../../ja/actions/undo.ja.md)
+
+## Description
+
+Undo the last undoable action for the focused surface or terminal, if possible. This can undo actions such as closing tabs or windows.
+
+Not every action in Ghostty can be undone or redone. The list of actions support undo/redo is currently limited to:
+
+- New window, close window
+- New tab, close tab
+- New split, close split
+
+All actions are only undoable/redoable for a limited time. For example, restoring a closed split can only be done for some number of seconds since the split was closed. The exact amount is configured with the `undo-timeout` configuration settings.
+
+The undo/redo actions being limited ensures that there is bounded memory usage over time, closed surfaces don't continue running in the background indefinitely, and the keybinds become available for terminal applications to use.
+
+Only implemented on macOS.
+
+## Example
+
+```conf
+keybind = cmd+z=undo
+```

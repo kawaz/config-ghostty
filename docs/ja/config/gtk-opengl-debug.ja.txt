@@ -1,0 +1,5 @@
+# GTK の OpenGL デバッグログを有効または無効にする。デフォルトはデバッグビルドの場合
+# `true`、その他は `false`。
+#
+# 利用可能時期: 1.1.0
+gtk-opengl-debug = false

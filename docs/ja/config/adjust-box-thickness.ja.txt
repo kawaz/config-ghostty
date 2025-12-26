@@ -1,0 +1,3 @@
+# ボックス描画文字の厚さのピクセルまたはパーセンテージ調整。
+# `adjust-cell-width` での調整に関する注記を参照してください。
+adjust-box-thickness =

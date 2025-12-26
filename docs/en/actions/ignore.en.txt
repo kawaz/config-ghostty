@@ -1,0 +1,6 @@
+ignore:
+  Ignore this key combination.
+  
+  Ghostty will not process this combination nor forward it to the child
+  process within the terminal, but it may still be processed by the OS or
+  other applications.

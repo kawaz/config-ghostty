@@ -1,0 +1,3 @@
+# Thickness in pixels or percentage adjustment of box drawing characters.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-box-thickness = 

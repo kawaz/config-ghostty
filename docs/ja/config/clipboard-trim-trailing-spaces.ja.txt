@@ -1,0 +1,3 @@
+# クリップボードにコピーされるデータの末尾の空白をトリム。
+# これは `clipboard-write` を通じてクリップボードに送信されるデータには影響しない。
+clipboard-trim-trailing-spaces = true

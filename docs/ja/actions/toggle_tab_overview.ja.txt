@@ -1,0 +1,6 @@
+toggle_tab_overview:
+  タブ概要を切り替えます。
+
+  これは Linux でのみ、かつシステムの libadwaita バージョンが 1.4 以上の場合に
+  サポートされています。現在の libadwaita バージョンは `ghostty +version` を
+  実行することで確認できます。

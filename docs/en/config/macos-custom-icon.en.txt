@@ -1,0 +1,5 @@
+# The absolute path to the custom icon file.
+# Supported formats include PNG, JPEG, and ICNS.
+# 
+# Defaults to `~/.config/ghostty/Ghostty.icns`
+macos-custom-icon = 

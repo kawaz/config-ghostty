@@ -1,0 +1,22 @@
+# Whether to show the tab bar.
+# 
+# Valid values:
+# 
+#  - `always`
+# 
+#    Always display the tab bar, even when there's only one tab.
+# 
+#    Available since: 1.2.0
+# 
+#  - `auto` *(default)*
+# 
+#    Automatically show and hide the tab bar. The tab bar is only
+#    shown when there are two or more tabs present.
+# 
+#  - `never`
+# 
+#    Never show the tab bar. Tabs are only accessible via the tab
+#    overview or by keybind actions.
+# 
+# Currently only supported on Linux (GTK).
+window-show-tab-bar = auto

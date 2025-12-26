@@ -1,0 +1,10 @@
+# Whether to repeat the background image or not.
+# 
+# If this is set to true, the background image will be repeated if there
+# would otherwise be blank space around it because it doesn't completely
+# fill the terminal area.
+# 
+# The default value is `false`.
+# 
+# Available since: 1.2.0
+background-image-repeat = false

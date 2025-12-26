@@ -1,0 +1,2 @@
+previous_tab:
+  Go to the previous tab.

@@ -1,0 +1,39 @@
+---
+description: Use non-native fullscreen on macOS
+platform: macos
+default: false
+---
+
+# macos-non-native-fullscreen
+
+**Language:** English | [日本語](../../ja/config/macos-non-native-fullscreen.ja.md)
+
+## Description
+
+If anything other than false, fullscreen mode on macOS will not use the native fullscreen, but make the window fullscreen without animations and using a new space. It's faster than the native fullscreen mode since it doesn't use animations.
+
+Important: tabs DO NOT WORK in this mode. Non-native fullscreen removes the titlebar and macOS native tabs require the titlebar. If you use tabs, you should not use this mode.
+
+If you fullscreen a window with tabs, the currently focused tab will become fullscreen while the others will remain in a separate window in the background. You can switch to that window using normal window-switching keybindings such as command+tilde. When you exit fullscreen, the window will return to the tabbed state it was in before.
+
+Allowable values are:
+
+- `true` - Use non-native macOS fullscreen, hide the menu bar
+- `false` - Use native macOS fullscreen
+- `visible-menu` - Use non-native macOS fullscreen, keep the menu bar visible
+- `padded-notch` - Use non-native macOS fullscreen, hide the menu bar, but ensure the window is not obscured by the notch on applicable devices. The area around the notch will remain transparent currently, but in the future we may fill it with the window background color.
+
+Changing this option at runtime works, but will only apply to the next time the window is made fullscreen. If a window is already fullscreen, it will retain the previous setting until fullscreen is exited.
+
+## Default
+
+```conf
+# https://ghostty.org/docs/config/reference#macos-non-native-fullscreen
+# Use non-native fullscreen on macOS (default: false)
+macos-non-native-fullscreen = false
+```
+
+## Related
+
+- [`fullscreen`](fullscreen.en.md)
+- [`toggle_fullscreen`](../actions/toggle_fullscreen.en.md)

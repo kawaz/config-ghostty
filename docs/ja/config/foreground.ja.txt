@@ -1,0 +1,3 @@
+# ウィンドウの前景色。
+# 16 進数（`#RRGGBB` または `RRGGBB`）または名前付き X11 色として指定。
+foreground = #ffffff

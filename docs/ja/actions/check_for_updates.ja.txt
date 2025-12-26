@@ -1,0 +1,4 @@
+check_for_updates:
+  更新を確認します。
+
+  macOS でのみ実装されています。

@@ -1,0 +1,23 @@
+# 読み込む カスタム CSS ファイル。
+#
+# GTK CSS ドキュメントは、以下のリンクから入手できます：
+#
+#   * https://docs.gtk.org/gtk4/css-overview.html - GTK CSS の概要。
+#   * https://docs.gtk.org/gtk4/css-properties.html - サポートされている CSS
+#     プロパティの包括的なリスト。
+#
+# `env GTK_DEBUG=interactive ghostty` を使用して Ghostty を起動し、
+# GTK Inspector を使用してリアルタイムで Ghostty の CSS を調整します。
+# CSS ファイル内のエラーは、Ghostty を起動した ターミナルにも報告されます。
+# GTK Inspector の詳細については、
+# https://developer.gnome.org/documentation/tools/inspector.html を参照してください。
+#
+# この設定を複数回繰り返して、複数のファイルを読み込むことができます。
+# ファイルが存在しない場合のエラーを抑制するには、ファイル パスの前に
+# ? 文字を付加します。リテラル ? 文字で始まるファイルを含める場合は、
+# ファイル パスを二重引用符（"）で囲みます。
+#
+# 単一スタイルシートのファイル サイズ制限は 5MiB です。
+#
+# 利用可能なバージョン: 1.1.0
+gtk-custom-css =

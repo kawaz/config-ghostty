@@ -1,0 +1,3 @@
+# String to send when we receive `ENQ` (`0x05`) from the command that we are
+# running. Defaults to an empty string if not set.
+enquiry-response = 

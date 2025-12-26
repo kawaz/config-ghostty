@@ -1,0 +1,9 @@
+close_tab:
+  Close the current tab and all splits therein _or_ close all tabs and
+  splits thein of tabs _other_ than the current tab, depending on the
+  mode.
+  
+  If the mode is not specified, defaults to closing the current tab.
+  
+  This might trigger a close confirmation popup, depending on the value
+  of the `confirm-close-surface` configuration setting.

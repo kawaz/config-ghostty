@@ -1,0 +1,3 @@
+# Thickness in pixels or percentage adjustment of the overline.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-overline-thickness = 

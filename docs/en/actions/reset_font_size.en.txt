@@ -1,0 +1,2 @@
+reset_font_size:
+  Reset the font size to the original configured size.

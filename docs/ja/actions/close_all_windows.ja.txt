@@ -1,0 +1,5 @@
+close_all_windows:
+  すべてのウィンドウを閉じます。
+
+  警告：このアクションは廃止されており、Linux と macOS のいずれでも
+  効果がありません。代わりに `all:close_window` の使用をお勧めします。

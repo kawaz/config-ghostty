@@ -1,0 +1,2 @@
+toggle_fullscreen:
+  Fullscreen or unfullscreen the current window.

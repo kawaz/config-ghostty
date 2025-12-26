@@ -1,0 +1,2 @@
+next_tab:
+  Go to the next tab.

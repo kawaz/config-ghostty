@@ -1,0 +1,5 @@
+# カスタムアイコンファイルへの絶対パス。
+# サポートされている形式には PNG、JPEG、ICNS が含まれます。
+#
+# デフォルトは `~/.config/ghostty/Ghostty.icns` です
+macos-custom-icon =

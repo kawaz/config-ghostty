@@ -1,0 +1,13 @@
+# リサイズオーバーレイが有効になっている場合、オーバーレイの位置を制御。
+# 可能なオプション：
+#
+#   * `center`
+#   * `top-left`
+#   * `top-center`
+#   * `top-right`
+#   * `bottom-left`
+#   * `bottom-center`
+#   * `bottom-right`
+#
+# デフォルトは `center`。
+resize-overlay-position = center

@@ -1,0 +1,30 @@
+# コマンドパレットへのカスタムエントリ。
+#
+# 各エントリは、タイトル、対応するアクション、およびオプションの説明が必要である。
+# 各フィールドには、フィールド名、コロン（`:`）、および指定された値を付ける必要がある。
+# アクションの構文は keybind アクションの構文と同じである。フィールド間のホワイトスペースは無視される。
+#
+# 値にコンマまたは他の特殊文字を埋め込む必要がある場合、値を二重引用符で囲み、
+# Zig 文字列リテラルとして解釈される。これはまた、値の開始または終了時に
+# ホワイトスペースを含める場合にも便利である。詳細については、
+# [Zig ドキュメント](https://ziglang.org/documentation/master/#Escape-Sequences)
+# を参照。マルチライン文字列リテラルはサポートされていないことに注意。
+#
+# フィールド名の周りに二重引用符を使用することはできない。
+#
+# ```ini
+# command-palette-entry = title:Reset Font Style, action:csi:0m
+# command-palette-entry = title:Crash on Main Thread,description:Causes a crash on the main (UI) thread.,action:crash:main
+# command-palette-entry = title:Focus Split: Right,description:"Focus the split to the right, if it exists.",action:goto_split:right
+# command-palette-entry = title:"Ghostty",description:"Add a little Ghostty to your terminal.",action:"text:\xf0\x9f\x91\xbb"
+# ```
+#
+# デフォルトでは、コマンドパレットはインタラクティブな設定で有用である可能性があるが、
+# 容易にアクセス可能またはメモリ可能なショートカットを持たないほとんどのアクションで
+# プリロードされている。デフォルトエントリは、この設定を空の値に設定することでクリアできる：
+#
+# ```ini
+# command-palette-entry =
+# ```
+#
+# 利用可能：1.2.0 以降

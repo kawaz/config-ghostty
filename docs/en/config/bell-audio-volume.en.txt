@@ -1,0 +1,7 @@
+# If `audio` is an enabled bell feature, this is the volume to play the audio
+# file at (relative to the system volume). This is a floating point number
+# ranging from 0.0 (silence) to 1.0 (as loud as possible). The default is 0.5.
+# (GTK only)
+# 
+# Available since: 1.2.0
+bell-audio-volume = 0.5

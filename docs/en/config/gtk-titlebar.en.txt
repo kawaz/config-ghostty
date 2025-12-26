@@ -1,0 +1,7 @@
+# When enabled, the full GTK titlebar is displayed instead of your window
+# manager's simple titlebar. The behavior of this option will vary with your
+# window manager.
+# 
+# This option does nothing when `window-decoration` is false or when running
+# under macOS.
+gtk-titlebar = true

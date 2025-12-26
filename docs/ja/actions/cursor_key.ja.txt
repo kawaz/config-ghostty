@@ -1,0 +1,2 @@
+cursor_key:
+  カーソルキーモードが有効（`application`）か無効（`normal`）かに応じて、pty にデータを送信します。

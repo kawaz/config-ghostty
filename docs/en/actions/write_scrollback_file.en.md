@@ -1,0 +1,34 @@
+---
+description: Write the terminal scrollback to a file
+platform: all
+---
+
+# write_scrollback_file
+
+**Language:** English | [日本語](../../ja/actions/write_scrollback_file.ja.md)
+
+## Description
+
+Write the entire scrollback into a temporary file with the specified action. The action determines what to do with the filepath.
+
+Valid actions are:
+
+- `copy`
+
+  Copy the file path into the clipboard.
+
+- `paste`
+
+  Paste the file path into the terminal.
+
+- `open`
+
+  Open the file in the default OS editor for text files.
+
+  The default OS editor is determined by using `open` on macOS and `xdg-open` on Linux.
+
+## Example
+
+```conf
+keybind = super+shift+s:write_scrollback_file:open
+```

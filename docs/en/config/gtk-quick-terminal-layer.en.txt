@@ -1,0 +1,48 @@
+# The size of the quick terminal.
+# 
+# The size can be specified either as a percentage of the screen dimensions
+# (height/width), or as an absolute size in pixels. Percentage values are
+# suffixed with `%` (e.g. `20%`) while pixel values are suffixed with `px`
+# (e.g. `300px`). A bare value without a suffix is a config error.
+# 
+# When only one size is specified, the size parameter affects the size of
+# the quick terminal on its *primary axis*, which depends on its position:
+# height for quick terminals placed on the top or bottom, and width for left
+# or right. The primary axis of a centered quick terminal depends on the
+# monitor's orientation: height when on a landscape monitor, and width when
+# on a portrait monitor.
+# 
+# The *secondary axis* would be maximized for non-center positioned
+# quick terminals unless another size parameter is specified, separated
+# from the first by a comma (`,`). Percentage and pixel sizes can be mixed
+# together: for instance, a size of `50%,500px` for a top-positioned quick
+# terminal would be half a screen tall, and 500 pixels wide.
+# 
+# Available since: 1.2.0
+# The layer of the quick terminal window. The higher the layer,
+# the more windows the quick terminal may conceal.
+# 
+# Valid values are:
+# 
+#  * `overlay`
+# 
+#    The quick terminal appears in front of all windows.
+# 
+#  * `top` (default)
+# 
+#    The quick terminal appears in front of normal windows but behind
+#    fullscreen overlays like lock screens.
+# 
+#  * `bottom`
+# 
+#    The quick terminal appears behind normal windows but in front of
+#    wallpapers and other windows in the background layer.
+# 
+#  * `background`
+# 
+#    The quick terminal appears behind all windows.
+# 
+# GTK Wayland only.
+# 
+# Available since: 1.2.0
+gtk-quick-terminal-layer = top

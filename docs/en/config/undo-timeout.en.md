@@ -1,0 +1,50 @@
+---
+description: Duration that undo operations remain available
+platform: macos
+default: "5s"
+---
+
+# undo-timeout
+
+**Language:** English | [日本語](../../ja/config/undo-timeout.ja.md)
+
+## Description
+
+The duration that undo operations remain available. After this time, the operation will be removed from the undo stack and cannot be undone.
+
+The default value is 5 seconds.
+
+This timeout applies per operation, meaning that if you perform multiple operations, each operation will have its own timeout. New operations do not reset the timeout of previous operations.
+
+A timeout of zero will effectively disable undo operations. It is not possible to set an infinite timeout, but you can set a very large timeout to effectively disable the timeout (on the order of years). This is highly discouraged, as it will cause the undo stack to grow indefinitely, memory usage to grow unbounded, and terminal sessions to never actually quit.
+
+The duration is specified as a series of numbers followed by time units. Whitespace is allowed between numbers and units. Each number and unit will be added together to form the total duration.
+
+The allowed time units are as follows:
+
+- `y` - 365 SI days, or 8760 hours, or 31536000 seconds. No adjustments are made for leap years or leap seconds.
+- `d` - one SI day, or 86400 seconds.
+- `h` - one hour, or 3600 seconds.
+- `m` - one minute, or 60 seconds.
+- `s` - one second.
+- `ms` - one millisecond, or 0.001 second.
+- `us` or `µs` - one microsecond, or 0.000001 second.
+- `ns` - one nanosecond, or 0.000000001 second.
+
+Examples:
+- `1h30m`
+- `45s`
+
+Units can be repeated and will be added together. This means that `1h1h` is equivalent to `2h`. This is confusing and should be avoided. A future update may disallow this.
+
+This configuration is only supported on macOS. Linux doesn't support undo operations at all so this configuration has no effect.
+
+Available since: 1.2.0
+
+## Default
+
+```conf
+# https://ghostty.org/docs/config/reference#undo-timeout
+# Duration that undo operations remain available (default: 5s)
+undo-timeout = 5s
+```

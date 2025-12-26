@@ -1,0 +1,2 @@
+paste_from_clipboard:
+  Paste the contents of the default clipboard.

@@ -1,0 +1,7 @@
+show_on_screen_keyboard:
+  Show the on-screen keyboard if one is present.
+  
+  Only implemented on Linux (GTK). On GNOME, the "Screen Keyboard"
+  accessibility feature must be turned on, which can be found under
+  Settings > Accessibility > Typing. Other platforms are as of now
+  untested.

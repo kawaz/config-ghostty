@@ -1,0 +1,5 @@
+# Hide the mouse immediately when typing. The mouse becomes visible again
+# when the mouse is used (button, movement, etc.). Platform-specific behavior
+# may dictate other scenarios where the mouse is shown. For example on macOS,
+# the mouse is shown again when a new window, tab, or split is created.
+mouse-hide-while-typing = false

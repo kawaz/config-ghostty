@@ -1,0 +1,17 @@
+# 背景画像の位置。
+#
+# 有効な値:
+#   * `top-left`
+#   * `top-center`
+#   * `top-right`
+#   * `center-left`
+#   * `center`
+#   * `center-right`
+#   * `bottom-left`
+#   * `bottom-center`
+#   * `bottom-right`
+#
+# デフォルト値は `center` です。
+#
+# Available since: 1.2.0
+background-image-position = center

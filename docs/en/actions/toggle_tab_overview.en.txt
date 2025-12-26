@@ -1,0 +1,6 @@
+toggle_tab_overview:
+  Toggle the tab overview.
+  
+  This is only supported on Linux and when the system's libadwaita
+  version is 1.4 or newer. The current libadwaita version can be
+  found by running `ghostty +version`.

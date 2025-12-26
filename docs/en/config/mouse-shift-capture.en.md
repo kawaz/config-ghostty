@@ -1,0 +1,41 @@
+---
+description: Whether running programs detect shift key with mouse click
+platform: all
+default: false
+---
+
+# mouse-shift-capture
+
+**Language:** English | [日本語](../../ja/config/mouse-shift-capture.ja.md)
+
+## Description
+
+Determines whether running programs can detect the shift key pressed with a mouse click. Typically, the shift key is used to extend mouse selection.
+
+The default value of `false` means that the shift key is not sent with the mouse protocol and will extend the selection. This value can be conditionally overridden by the running program with the `XTSHIFTESCAPE` sequence.
+
+The value `true` means that the shift key is sent with the mouse protocol but the running program can override this behavior with `XTSHIFTESCAPE`.
+
+The value `never` is the same as `false` but the running program cannot override this behavior with `XTSHIFTESCAPE`. The value `always` is the same as `true` but the running program cannot override this behavior with `XTSHIFTESCAPE`.
+
+If you always want shift to extend mouse selection even if the program requests otherwise, set this to `never`.
+
+Valid values are:
+
+* `true`
+* `false`
+* `always`
+* `never`
+
+## Default
+
+```conf
+# https://ghostty.org/docs/config/reference#mouse-shift-capture
+# Whether shift key extends selection (default: false)
+mouse-shift-capture = false
+```
+
+## Related
+
+- [mouse-hide-while-typing](mouse-hide-while-typing.en.md)
+- [mouse-scroll-multiplier](mouse-scroll-multiplier.en.md)

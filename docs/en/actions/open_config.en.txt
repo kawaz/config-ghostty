@@ -1,0 +1,6 @@
+open_config:
+  Open the configuration file in the default OS editor.
+  
+  If your default OS editor isn't configured then this will fail.
+  Currently, any failures to open the configuration will show up only in
+  the logs.

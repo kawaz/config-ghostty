@@ -1,0 +1,4 @@
+inspector:
+  Control the visibility of the terminal inspector.
+  
+  Valid arguments: `toggle`, `show`, `hide`.

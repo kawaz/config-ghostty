@@ -1,0 +1,5 @@
+toggle_maximize:
+  Maximize or unmaximize the current window.
+  
+  This has no effect on macOS as it does not have the concept of
+  maximized windows.

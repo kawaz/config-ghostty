@@ -1,0 +1,7 @@
+# The color of the ghost in the macOS app icon.
+# 
+# Note: This configuration is required when `macos-icon` is set to
+# `custom-style`.
+# 
+# Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
+macos-icon-ghost-color = 

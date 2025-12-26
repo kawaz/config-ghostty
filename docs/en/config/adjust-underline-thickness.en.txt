@@ -1,0 +1,3 @@
+# Thickness in pixels of the underline.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-underline-thickness = 

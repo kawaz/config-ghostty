@@ -1,0 +1,5 @@
+close_surface:
+  Close the current "surface", whether that is a window, tab, split, etc.
+  
+  This might trigger a close confirmation popup, depending on the value
+  of the `confirm-close-surface` configuration setting.

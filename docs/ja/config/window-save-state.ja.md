@@ -1,0 +1,39 @@
+---
+description: ウィンドウ状態の保存と復元を有効化する
+platform: macos
+default: default
+---
+
+# window-save-state
+
+**言語:** [English](../../en/config/window-save-state.en.md) | 日本語
+
+## 説明
+
+ウィンドウ状態の保存と復元を有効化するかどうか。ウィンドウ状態には、その位置、サイズ、タブ、スプリットなどが含まれます。一部のウィンドウ状態は、シェル統合を必要とします。シェル統合の詳細については、`shell-integration` を参照してください。
+
+この設定には3つの有効な値があります：
+
+- `default` はデフォルトのシステム動作を使用します。macOS では、アプリケーションが強制的に終了された場合、または Settings.app 経由でシステムワイド に設定されている場合にのみ状態が保存されます。
+
+- `never` はウィンドウ状態を保存しません。
+
+- `always` は Ghostty の終了時にウィンドウ状態を常に保存します。
+
+Ghostty が実行されていない状態で、この値を `never` に変更した場合、次の Ghostty 起動時にはウィンドウ状態が復元されません。
+
+Ghostty が実行されていない状態でこの値を `default` に変更し、前の終了時に状態が保存された場合、次の Ghostty 起動時にはウィンドウ状態が復元されます。これは、前の終了が強制保存によるものかどうかを Ghostty が知ることができないためです（macOS はこの情報を提供しません）。
+
+Ghostty が実行されていない状態でこの値を変更して、ウィンドウ状態が保存されるようにした場合、Ghostty はこれが有効化されている場合に限り終了時に状態を保存するため、前のウィンドウ状態は復元されません。
+
+## デフォルト
+
+```conf
+# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/config/window-save-state.ja.md
+# ウィンドウ状態の保存と復元を有効化する (default: default)
+window-save-state = default
+```
+
+## 関連設定
+
+- [`shell-integration`](shell-integration.ja.md)
