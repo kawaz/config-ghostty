@@ -9,6 +9,7 @@ keybind = shift+enter=text:\x1b\r
 
 # TODO: タブを閉じた時に右ではなく左のタブにフォーカスしたい（設定が無い…issue立てる？）
 # TODO: pane自体を移動（swap/rotate）したい（機能が無い…issue立てる？）
+# TODO: タブのアクティブ/非アクティブの色差を調整したい（macOSでは設定が無い…issue立てる？）
 
 # よく使うキーバインド（デフォルト）メモ
 # - Cmd+D: 右分割, Cmd+Shift+D: 下分割

@@ -15,7 +15,8 @@ Ghostty ターミナルエミュレーターの設定・アクションドキュ
 │   ├── digest-worker.md            # platform/description抽出
 │   ├── classifier.md               # カテゴリ分類・index生成
 │   ├── translator.md               # 翻訳実行
-│   └── index-translator.md         # インデックス翻訳
+│   ├── index-translator.md         # インデックス翻訳
+│   └── quality-checker.md          # 品質確認（ファイル完全性・リンク有効性）
 └── scripts/
     ├── split-docs.sh               # ghosttyコマンドからドキュメント抽出
     ├── split-docs-config.sh        # config設定の分割
@@ -68,7 +69,10 @@ Phase 4: 翻訳 + インデックス翻訳（並列・haiku）
          ├── translator × MAX_WORKERS → .en.md, .ja.txt, .ja.md
          └── index-translator × 1 → ja/index-*.ja.md
 
-Phase 5: 結果報告
+Phase 5: 品質確認（並列・haiku）
+         └── quality-checker × 2 → ファイル完全性・リンク有効性チェック
+
+Phase 6: 結果報告
 ```
 
 ---

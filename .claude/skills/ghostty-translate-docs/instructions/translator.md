@@ -2,6 +2,19 @@
 
 このエージェントは指定されたファイルリストの翻訳と Markdown 生成を担当する。
 
+## 必須出力（最重要・絶対遵守）
+
+**バッチファイル内の各エントリについて、以下の3ファイルを必ず生成すること:**
+
+1. `en/{path}.en.md` - 英語版 Markdown
+2. `ja/{path}.ja.txt` - 日本語版テキスト
+3. `ja/{path}.ja.md` - 日本語版 Markdown
+
+**スキップ禁止:**
+- 内容が短くても（1-3行でも）必ず3ファイルすべてを生成する
+- 「シンプルすぎる」「.txt で十分」などの理由でスキップしてはいけない
+- 元の .en.txt が存在する限り、対応する .en.md, .ja.txt, .ja.md を生成する
+
 ## 禁止事項
 
 以下は **絶対にやってはいけない**:
@@ -111,43 +124,51 @@ platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "li
 ...
 ```
 
-#### config の構造
+#### config / actions 共通の構造
 
 ```markdown
-# {config-name}
+# {name}
 
-**Language:** English | [日本語](../../ja/config/{config-name}.ja.md)
+**Language:** English | [日本語](../../ja/{type}/{name}.ja.md)
 
-{説明文}
+## Description
+
+{.en.txt の内容をMarkdown化して表示}
+- コメントの `#` を除去
+- 箇条書き（* で始まる行）はそのまま Markdown リスト化
+- バッククォートで囲まれた設定名（例: `window-decoration`）はリンク化:
+  - 同じカテゴリ内: [window-decoration](window-decoration.en.md)
+- 空行は維持してパラグラフを分ける
+\```
 
 ## Default
 
 ```conf
-# {説明コメント} (default: {デフォルト値})
-{config-name} = {デフォルト値}
+# https://ghostty.org/docs/config/reference#{name}
+# {1行説明} (default: {デフォルト値})
+{name} = {デフォルト値}
 \```
 
-## Examples
+## Related（同じコメントブロックを共有する設定がある場合）
 
-```conf
-# {説明}
-{config-name} = {値}
-\```
-
-## Related
-
-- [{related-config}]({related-config}.en.md) - 関連説明
+- [{related-name}]({related-name}.en.md)
 ```
 
-#### actions の構造
+#### 設定名のリンク化ルール
 
-```markdown
-# {action_name}
+.txt 内でバッククォートで囲まれた設定名は自動リンク化:
+- `window-decoration` → [`window-decoration`](window-decoration.en.md)
+- `font-family` → [`font-family`](../config/font-family.en.md)（異なるカテゴリの場合）
 
-**Language:** English | [日本語](../../ja/actions/{action_name}.ja.md)
+#### Related セクションの情報源
 
-{説明文}
-```
+Related セクションには以下を含める:
+
+1. **同じグループキー（コメントブロック共有）**: バッチファイルで同じグループキーを持つ設定
+2. **category.json のカテゴリ情報**: 同じカテゴリに属する関連設定
+3. **本文中で参照される設定**: Description 内でリンク化した設定
+
+カテゴリサイズが大きい場合は、その中から現在の設定に特に関連するものを選択する。
 
 ### 4. 日本語版 .txt の生成
 
@@ -156,10 +177,11 @@ platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "li
 
 ### 5. 日本語版 .md の生成
 
-`en/{path}.en.md` を日本語に翻訳し、`ja/{path}.ja.md` として保存。
+英語版 .md と同じ構造で、日本語に翻訳して生成。
 
 - **frontmatter の description**: 日本語に翻訳
-- **言語切替リンク**: `English | [日本語](...)`→ `[English](../../en/.../.en.md) | 日本語` に変更
+- **言語切替リンク**: `[English](../../en/.../.en.md) | 日本語`
+- **Description セクション**: .ja.txt の内容をMarkdown化（英語版と同様の装飾ルール）
 - **リンク先**: `{path}.en.md` → `{path}.ja.md` に変更
 - **コードブロック内コメント**: 日本語に翻訳
 - **ドキュメントURL**: `# https://github.com/kawaz/config-ghostty/blob/main/docs/ja/{path}.ja.md`
@@ -202,14 +224,29 @@ platform の変換: `["all"]` → `all`, `["macos"]` → `macos`, `["macos", "li
 - フォーマット（インデント、改行など）は元のファイルを維持
 - 設定名やコード例の値はそのまま維持
 - Markdown のリンク構造を維持
+- テーブル内のコード値列挙は英語版と同様にカンマ区切りで維持
+  - 例: `feat`, `+feat`, `feat on`, `feat=1`（「、」ではなく「,」を使用）
 
 ---
 
 ## 出力
 
+### 報告前の検証（必須）
+
+結果を報告する前に、必ず以下を確認すること:
+
+1. バッチファイルの各エントリについて、以下3ファイルの存在を確認:
+   - `{docs_dir}/en/{path}.en.md`
+   - `{docs_dir}/ja/{path}.ja.txt`
+   - `{docs_dir}/ja/{path}.ja.md`
+
+2. Glob ツールで実際にファイルが存在するか確認
+
+**欠落がある場合**: 欠落しているファイルを生成してから報告する。
+
 ### 結果ファイル
 
-処理完了後、`result_file` に結果を書き出す:
+検証が完了したら、`result_file` に結果を書き出す:
 
 ```
 完了:15/15
