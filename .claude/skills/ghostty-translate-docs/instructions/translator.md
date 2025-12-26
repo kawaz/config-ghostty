@@ -77,7 +77,25 @@ def456:config/adjust-cell-width
 各グループについて:
 
 1. **グループ内の1つの .en.txt を読み込む**（同じ内容なので1つでよい）
-2. **グループ内の各ファイルについて** .en.md, .ja.txt, .ja.md を生成
+2. **グループ内の全ファイルについて** .en.md, .ja.txt, .ja.md を生成
+
+#### 最重要: グループ内の全ファイルに対してファイルを生成する
+
+バッチファイルに `group_key:path` のエントリがある場合、その `path` ごとに必ず3ファイルを生成する。
+
+例: バッチファイルに以下がある場合:
+```
+b2c2bb40:config/font-style
+b2c2bb40:config/font-style-bold
+b2c2bb40:config/font-style-italic
+```
+
+以下の **9ファイル** を生成する（3エントリ × 3ファイル）:
+- `en/config/font-style.en.md`, `ja/config/font-style.ja.txt`, `ja/config/font-style.ja.md`
+- `en/config/font-style-bold.en.md`, `ja/config/font-style-bold.ja.txt`, `ja/config/font-style-bold.ja.md`
+- `en/config/font-style-italic.en.md`, `ja/config/font-style-italic.ja.txt`, `ja/config/font-style-italic.ja.md`
+
+**グループ内の1つだけ処理して終わりにしてはいけない。**
 
 #### 重要: グループ内で固有のコンテンツを生成
 
@@ -235,14 +253,26 @@ Related セクションには以下を含める:
 
 結果を報告する前に、必ず以下を確認すること:
 
-1. バッチファイルの各エントリについて、以下3ファイルの存在を確認:
-   - `{docs_dir}/en/{path}.en.md`
-   - `{docs_dir}/ja/{path}.ja.txt`
-   - `{docs_dir}/ja/{path}.ja.md`
+#### Step 1: バッチファイルのエントリ数をカウント
 
-2. Glob ツールで実際にファイルが存在するか確認
+バッチファイルの行数（= エントリ数 = 期待ファイル数）を確認。
 
-**欠落がある場合**: 欠落しているファイルを生成してから報告する。
+#### Step 2: 生成ファイル数の確認
+
+バッチファイルの **各エントリ** について、以下3ファイルの存在を確認:
+- `{docs_dir}/en/{path}.en.md`
+- `{docs_dir}/ja/{path}.ja.txt`
+- `{docs_dir}/ja/{path}.ja.md`
+
+Glob ツールで実際にファイルが存在するか確認。
+
+#### Step 3: 数の一致確認
+
+- バッチエントリ数 × 3 = 生成ファイル数 であること
+- 例: バッチに35エントリ → 105ファイル生成
+
+**欠落がある場合**: 欠落しているファイルを特定し、生成してから報告する。
+「完了」と報告するのはすべてのファイルが存在することを確認した後のみ。
 
 ### 結果ファイル
 
