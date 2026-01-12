@@ -1,5 +1,6 @@
+#env = BASHRC_DEBUG=1
 command = /opt/homebrew/bin/bash
-auto-update-channel = stable
+auto-update-channel = tip
 theme = GitHub Dark
 
 # タイトルバーにタブを統合してアクティブタブを分かりやすく
@@ -8,7 +9,8 @@ font-family = HackGen Console NF
 keybind = shift+enter=text:\x1b\r
 
 # TODO: タブを閉じた時に右ではなく左のタブにフォーカスしたい（設定が無い…issue立てる？）
-# TODO: pane自体を移動（swap/rotate）したい（機能が無い…issue立てる？）
+# TODO: pane移動のキーバインド対応待ち（マウスドラッグは可能、keyboard actionは未実装）
+# ref: https://github.com/ghostty-org/ghostty/discussions/3325
 # TODO: タブのアクティブ/非アクティブの色差を調整したい（macOSでは設定が無い…issue立てる？）
 
 # よく使うキーバインド（デフォルト）メモ
@@ -17,6 +19,13 @@ keybind = shift+enter=text:\x1b\r
 # - Cmd+Shift+Enter: pane最大化/元に戻す
 # - Cmd+Shift+[ / Ctrl+Shift+Tab: 左タブ, Cmd+Shift+] / Ctrl+Tab: 右タブ
 # - Cmd+Shift+,: 設定リロード
+# - Shift+Cmd+Option+矢印: スプリット幅変更（下記で追加）
+
+# スプリットサイズ変更
+keybind = shift+super+alt+left=resize_split:left,16
+keybind = shift+super+alt+right=resize_split:right,16
+keybind = shift+super+alt+up=resize_split:up,16
+keybind = shift+super+alt+down=resize_split:down,16
 
 # 非アクティブpaneの色調整
 # - fill未指定(=背景色)+低opacity → 背景そのままで文字だけ薄くなる（彩度変わらず）
@@ -31,3 +40,7 @@ split-divider-color = #606060
 
 # スクロールバックのバッファサイズを増やす（default: 10000000 = 10MB）
 scrollback-limit = 200000000
+
+# コピーモード追加（キーボードショートカットじゃなくコマンドパレットで screen 辺りをキーに探すほうが良いと判断）
+# keybind = super+alt+s=write_scrollback_file:open
+# keybind = super+alt+s=write_scrollback_file:copy
