@@ -1,11 +1,13 @@
 #env = BASHRC_DEBUG=1
-command = /opt/homebrew/bin/bash
+#command = /opt/homebrew/bin/bash
 auto-update-channel = tip
 theme = GitHub Dark
 
 # タイトルバーにタブを統合してアクティブタブを分かりやすく
 macos-titlebar-style = tabs
 font-family = HackGen Console NF
+# 全角スペース(U+3000)を可視化しないフォントで表示
+font-codepoint-map = U+3000=Hiragino Kaku Gothic ProN
 keybind = shift+enter=text:\x1b\r
 
 # TODO: タブを閉じた時に右ではなく左のタブにフォーカスしたい（設定が無い…issue立てる？）
@@ -37,6 +39,10 @@ unfocused-split-opacity = 0.4
 
 # 分割線の色（default: 自動）
 split-divider-color = #606060
+
+# 新規タブは$HOME、分割はcwdを継承
+tab-inherit-working-directory = false
+split-inherit-working-directory = true
 
 # スクロールバックのバッファサイズを増やす（default: 10000000 = 10MB）
 scrollback-limit = 200000000
