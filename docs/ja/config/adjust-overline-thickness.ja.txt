@@ -1,3 +1,0 @@
-# オーバーラインの厚みをピクセルまたはパーセンテージで調整。
-# `adjust-cell-width` の調整に関する注記を参照。
-adjust-overline-thickness =

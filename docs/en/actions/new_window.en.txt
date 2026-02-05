@@ -1,5 +1,0 @@
-new_window:
-  Open a new window.
-  
-  If the application isn't currently focused,
-  this will bring it to the front.

@@ -1,4 +1,0 @@
-# Distance in pixels or percentage adjustment from the bottom of the cell to the text baseline.
-# Increase to move baseline UP, decrease to move baseline DOWN.
-# See the notes about adjustments in `adjust-cell-width`.
-adjust-font-baseline = 

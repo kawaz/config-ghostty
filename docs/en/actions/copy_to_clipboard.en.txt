@@ -1,2 +1,0 @@
-copy_to_clipboard:
-  Copy the selected text to the clipboard.

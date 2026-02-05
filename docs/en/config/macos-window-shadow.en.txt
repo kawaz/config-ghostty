@@ -1,4 +1,0 @@
-# Whether to enable the macOS window shadow. The default value is true.
-# With some window managers and window transparency settings, you may
-# find false more visually appealing.
-macos-window-shadow = true

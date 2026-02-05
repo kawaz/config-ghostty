@@ -1,5 +1,0 @@
-# The color of the split divider. If this is not set, a default will be chosen.
-# Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
-# 
-# Available since: 1.1.0
-split-divider-color = 

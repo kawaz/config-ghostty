@@ -1,17 +1,32 @@
 #env = BASHRC_DEBUG=1
-command = /opt/homebrew/bin/bash
+#command = /opt/homebrew/bin/bash
 auto-update-channel = tip
 theme = GitHub Dark
 
 # タイトルバーにタブを統合してアクティブタブを分かりやすく
 macos-titlebar-style = tabs
 font-family = HackGen Console NF
+# 全角スペース(U+3000)を可視化しないフォントで表示
+font-codepoint-map = U+3000=Hiragino Kaku Gothic ProN
 keybind = shift+enter=text:\x1b\r
+# Cmd+Enterでフルスクリーン化を無効化（誤爆防止）
+keybind = super+enter=unbind
 
 # TODO: タブを閉じた時に右ではなく左のタブにフォーカスしたい（設定が無い…issue立てる？）
 # TODO: pane移動のキーバインド対応待ち（マウスドラッグは可能、keyboard actionは未実装）
 # ref: https://github.com/ghostty-org/ghostty/discussions/3325
-# TODO: タブのアクティブ/非アクティブの色差を調整したい（macOSでは設定が無い…issue立てる？）
+# TODO: タブのアクティブ/非アクティブの色差を調整したい → https://github.com/ghostty-org/ghostty/discussions/10475
+
+# デフォルトでキー入力を差し替えている設定を無効化
+# （tmux 等のアプリに正しい入力情報が届かなくなるため）
+# - alt+arrow: default esc:b/esc:f（単語移動）→ zsh 側で対応（rc.d/keybinds.zsh）
+# - super+arrow: default \x01/\x05（Ctrl+A/E）
+# - super+backspace: default \x15（Ctrl+U）
+keybind = alt+arrow_left=unbind
+keybind = alt+arrow_right=unbind
+keybind = super+arrow_left=unbind
+keybind = super+arrow_right=unbind
+keybind = super+backspace=unbind
 
 # よく使うキーバインド（デフォルト）メモ
 # - Cmd+D: 右分割, Cmd+Shift+D: 下分割
@@ -37,6 +52,10 @@ unfocused-split-opacity = 0.4
 
 # 分割線の色（default: 自動）
 split-divider-color = #606060
+
+# 新規タブは$HOME、分割はcwdを継承
+tab-inherit-working-directory = false
+split-inherit-working-directory = true
 
 # スクロールバックのバッファサイズを増やす（default: 10000000 = 10MB）
 scrollback-limit = 200000000

@@ -1,7 +1,0 @@
-# If true, keep the terminal open after the command exits. Normally, the
-# terminal window closes when the running command (such as a shell) exits.
-# With this true, the terminal window will stay open until any keypress is
-# received.
-# 
-# This is primarily useful for scripts or debugging.
-wait-after-command = false

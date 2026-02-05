@@ -1,8 +1,0 @@
-# The total amount of bytes that can be used for image data (e.g. the Kitty
-# image protocol) per terminal screen. The maximum value is 4,294,967,295
-# (4GiB). The default is 320MB. If this is set to zero, then all image
-# protocols will be disabled.
-# 
-# This value is separate for primary and alternate screens so the effective
-# limit per surface is double.
-image-storage-limit = 320000000

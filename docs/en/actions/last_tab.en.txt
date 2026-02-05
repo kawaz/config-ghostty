@@ -1,2 +1,0 @@
-last_tab:
-  Go to the last tab.

@@ -1,5 +1,0 @@
-goto_tab:
-  Go to the tab with the specific index, starting from 1.
-  
-  If the tab number is higher than the number of tabs,
-  this will go to the last tab.

@@ -1,3 +1,0 @@
-# 打消し線の厚みをピクセルまたはパーセンテージで調整します。
-# `adjust-cell-width` の調整に関する注意を参照してください。
-adjust-strikethrough-thickness =

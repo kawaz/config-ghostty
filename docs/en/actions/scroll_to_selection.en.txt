@@ -1,2 +1,0 @@
-scroll_to_selection:
-  Scroll to the selected text.

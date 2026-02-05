@@ -1,4 +1,0 @@
-# 太字イタリック テキスト用のフォント ファミリー。
-#
-# 詳細については font-family を参照してください。
-font-family-bold-italic =

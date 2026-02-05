@@ -1,4 +1,0 @@
-resize_split:
-  Resize the current split in the specified direction and amount in
-  pixels. The two arguments should be joined with a comma (`,`),
-  like in `resize_split:up,10`.

@@ -1,2 +1,0 @@
-paste_from_clipboard:
-  デフォルト クリップボードの内容を貼り付ける。

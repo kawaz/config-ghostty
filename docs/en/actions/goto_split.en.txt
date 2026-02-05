@@ -1,4 +1,0 @@
-goto_split:
-  Focus on a split either in the specified direction (`right`, `down`,
-  `left` and `up`), or in the adjacent split in the order of creation
-  (`previous` and `next`).

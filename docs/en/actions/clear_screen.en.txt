@@ -1,2 +1,0 @@
-clear_screen:
-  Clear the screen and all scrollback.

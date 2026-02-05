@@ -1,4 +1,0 @@
-# Distance in pixels or percentage adjustment from the top of the cell to the top of the strikethrough.
-# Increase to move strikethrough DOWN, decrease to move strikethrough UP.
-# See the notes about adjustments in `adjust-cell-width`.
-adjust-strikethrough-position = 

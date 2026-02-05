@@ -1,6 +1,0 @@
-reload_config:
-  Reload the configuration.
-  
-  The exact meaning depends on the app runtime in use, but this usually
-  involves re-reading the configuration file and applying any changes
-  Note that not all changes can be applied at runtime.

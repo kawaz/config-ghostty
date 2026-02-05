@@ -1,4 +1,0 @@
-show_gtk_inspector:
-  GTK インスペクターを表示します。
-
-  macOS では効果がありません。

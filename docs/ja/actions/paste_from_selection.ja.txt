@@ -1,2 +1,0 @@
-paste_from_selection:
-  選択クリップボードの内容を貼り付けます。

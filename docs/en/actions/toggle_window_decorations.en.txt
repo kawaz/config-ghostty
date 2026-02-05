@@ -1,4 +1,0 @@
-toggle_window_decorations:
-  Toggle window decorations (titlebar, buttons, etc.) for the current window.
-  
-  Only implemented on Linux.

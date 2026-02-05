@@ -1,7 +1,0 @@
-# The position where new tabs are created. Valid values:
-# 
-#   * `current` - Insert the new tab after the currently focused tab,
-#     or at the end if there are no focused tabs.
-# 
-#   * `end` - Insert the new tab at the end of the tab list.
-window-new-tab-position = current

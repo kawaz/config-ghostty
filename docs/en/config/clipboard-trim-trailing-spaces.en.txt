@@ -1,3 +1,0 @@
-# Trims trailing whitespace on data that is copied to the clipboard. This does
-# not affect data sent to the clipboard via `clipboard-write`.
-clipboard-trim-trailing-spaces = true

@@ -1,5 +1,0 @@
-prompt_surface_title:
-  ポップアッププロンプトを介して、現在フォーカスされているサーフェスのタイトルを変更します。
-
-  これは Linux で libadwaita 1.5 以降が必要です。現在の libadwaita バージョンは
-  `ghostty +version` を実行することで確認できます。

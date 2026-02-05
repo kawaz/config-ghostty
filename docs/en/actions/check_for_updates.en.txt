@@ -1,4 +1,0 @@
-check_for_updates:
-  Check for updates.
-  
-  Only implemented on macOS.

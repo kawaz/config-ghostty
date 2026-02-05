@@ -1,3 +1,0 @@
-goto_split:
-  指定した方向（`right`、`down`、`left`、`up`）のスプリットか、
-  作成順の隣接スプリット（`previous` と `next`）にフォーカスを当てます。

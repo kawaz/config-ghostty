@@ -1,3 +1,0 @@
-# Draw fonts with a thicker stroke, if supported.
-# This is currently only supported on macOS.
-font-thicken = false
