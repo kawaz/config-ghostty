@@ -1,7 +1,17 @@
 #env = BASHRC_DEBUG=1
 #command = /opt/homebrew/bin/bash
 auto-update-channel = tip
+
+# option+clickでカーソル移動を無効化
+cursor-click-to-move = false
 theme = GitHub Dark
+
+# よくわからん機能なのでOFF
+shell-integration = none
+
+# パスワード入力時のSecure Input自動有効化をOFF
+# IMEやKarabiner等との干渉でキー入力遅延の原因になり得るため
+macos-auto-secure-input = false
 
 # タイトルバーにタブを統合してアクティブタブを分かりやすく
 macos-titlebar-style = tabs
@@ -58,7 +68,8 @@ tab-inherit-working-directory = false
 split-inherit-working-directory = true
 
 # スクロールバックのバッファサイズを増やす（default: 10000000 = 10MB）
-scrollback-limit = 200000000
+# Design rationale: 200MBだとメモリ圧迫でキー入力遅延の原因になり得るため50MBに抑制
+scrollback-limit = 50000000
 
 # コピーモード追加（キーボードショートカットじゃなくコマンドパレットで screen 辺りをキーに探すほうが良いと判断）
 # keybind = super+alt+s=write_scrollback_file:open
