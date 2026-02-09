@@ -1,0 +1,58 @@
+# keybind メモ
+#
+# ## URLs
+# - https://ghostty.org/docs/config/keybind
+# - https://github.com/ghostty-org/website/blob/main/docs/config/keybind/index.md
+# - https://github.com/ghostty-org/website/blob/main/docs/config/keybind/sequence.mdx#
+#
+# ### Modifiers (+show-configsで表示される順)
+# - super (alias: cmd, command)
+# - ctrl (alias: control)
+# - alt (alias: opt, option)
+# - shift
+#
+# ### Prefixs
+#  ┌──────────────┬────────────────────────────────────────┐
+#  │    Prefix    │                  説明                  │
+#  ├──────────────┼────────────────────────────────────────┤
+#  │ all:         │ 全てのターミナルサーフェスに適用       │
+#  ├──────────────┼────────────────────────────────────────┤
+#  │ global:      │ システム全体で有効（macOSのみ）        │
+#  ├──────────────┼────────────────────────────────────────┤
+#  │ unconsumed:  │ 入力を消費せずプログラムにも送る       │
+#  ├──────────────┼────────────────────────────────────────┤
+#  │ performable: │ アクションが実行可能な時のみ入力を消費 │
+#  └──────────────┴────────────────────────────────────────┘
+#  複数指定可（例: global:unconsumed:ctrl+a=reload_config）
+#
+# ### シーケンス
+# `>` で繋ぐことでシーケンス入力ができる
+# keybind ctrl+a>n=new_tab
+#
+
+
+# デフォルトでキー入力を差し替えている設定を無効化
+# （tmux 等のアプリに正しい入力情報が届かなくなるため）
+# - alt+arrow: default esc:b/esc:f（単語移動）→ zsh 側で対応（rc.d/keybinds.zsh）
+# - super+arrow: default \x01/\x05（Ctrl+A/E）
+# - super+backspace: default \x15（Ctrl+U）
+keybind = alt+arrow_left=unbind
+keybind = alt+arrow_right=unbind
+keybind = super+arrow_left=unbind
+keybind = super+arrow_right=unbind
+keybind = super+backspace=unbind
+
+# よく使うキーバインド（デフォルト）メモ
+# - Cmd+D: 右分割, Cmd+Shift+D: 下分割
+# - Cmd+Option+矢印: pane移動
+# - Cmd+Shift+Enter: pane最大化/元に戻す
+# - Cmd+Shift+[ / Ctrl+Shift+Tab: 左タブ, Cmd+Shift+] / Ctrl+Tab: 右タブ
+# - Cmd+Shift+,: 設定リロード
+# - Shift+Cmd+Option+矢印: スプリット幅変更（下記で追加）
+
+# スプリットサイズ変更
+keybind = shift+super+alt+left=resize_split:left,16
+keybind = shift+super+alt+right=resize_split:right,16
+keybind = shift+super+alt+up=resize_split:up,16
+keybind = shift+super+alt+down=resize_split:down,16
+

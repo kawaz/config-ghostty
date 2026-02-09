@@ -1,0 +1,13 @@
+theme = GitHub Dark
+
+# 非アクティブpaneの色調整
+# - fill未指定(=背景色)+低opacity → 背景そのままで文字だけ薄くなる（彩度変わらず）
+# - グレーfill+低opacity → 彩度は落ちるが白寄りになり眩しくなる
+# - 暗めグレーfill+低opacity → 彩度を落としつつ眩しさを抑えられる ← これ
+# (default: unfocused-split-fill=背景色, unfocused-split-opacity=0.7)
+unfocused-split-fill = #303030
+unfocused-split-opacity = 0.4
+
+# 分割線の色（default: 自動）
+split-divider-color = #606060
+
