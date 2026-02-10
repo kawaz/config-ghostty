@@ -35,6 +35,7 @@ function parseConfigFile(
   const singles = new Map<string, string>();
   const keybinds: { trigger: string; action: string }[] = [];
   if (!existsSync(path)) return { singles, keybinds };
+  const baseDir = dirname(path);
   for (const line of readFileSync(path, "utf-8").split("\n")) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
@@ -42,7 +43,14 @@ function parseConfigFile(
     if (i === -1) continue;
     const key = trimmed.slice(0, i);
     const val = trimmed.slice(i + 3);
-    if (key === "keybind") {
+    if (key === "config-file") {
+      // config-file ディレクティブを再帰的に辿る（?プレフィクスはoptional）
+      let includePath = val.startsWith("?") ? val.slice(1) : val;
+      if (!includePath.startsWith("/")) includePath = join(baseDir, includePath);
+      const included = parseConfigFile(includePath);
+      for (const [k, v] of included.singles) singles.set(k, v);
+      keybinds.push(...included.keybinds);
+    } else if (key === "keybind") {
       const eq = val.indexOf("=");
       if (eq !== -1) keybinds.push({ trigger: val.slice(0, eq), action: val.slice(eq + 1) });
     } else {
@@ -181,6 +189,7 @@ const current = parseConfigOutput(run(["+show-config"]));
 const currentSingles = new Map<string, string>();
 const currentPalette = new Map<string, string>();
 const currentKeybinds = new Map<string, string>();
+const currentConfigFiles: string[] = [];
 for (const { key, value } of current) {
   if (key === "palette") {
     const eq = value.indexOf("=");
@@ -188,6 +197,8 @@ for (const { key, value } of current) {
   } else if (key === "keybind") {
     const eq = value.indexOf("=");
     if (eq !== -1) currentKeybinds.set(value.slice(0, eq), value.slice(eq + 1));
+  } else if (key === "config-file") {
+    currentConfigFiles.push(value);
   } else {
     currentSingles.set(key, value);
   }
@@ -196,6 +207,7 @@ for (const { key, value } of current) {
 // デフォルト値マップ
 const defaultPalette = new Map<string, string>();
 const defaultKeybinds = new Map<string, string>();
+const defaultConfigFiles: string[] = [];
 for (const { key, value } of defaults) {
   if (key === "palette") {
     const eq = value.indexOf("=");
@@ -203,6 +215,8 @@ for (const { key, value } of defaults) {
   } else if (key === "keybind") {
     const eq = value.indexOf("=");
     if (eq !== -1) defaultKeybinds.set(value.slice(0, eq), value.slice(eq + 1));
+  } else if (key === "config-file") {
+    defaultConfigFiles.push(value);
   }
 }
 
@@ -217,13 +231,23 @@ if (!noHeader) {
 }
 const seen = new Set<string>();
 for (const { key, value: defVal } of defaults) {
-  if (key === "palette" || key === "keybind" || seen.has(key)) continue;
+  if (key === "palette" || key === "keybind" || key === "config-file" || seen.has(key)) continue;
   seen.add(key);
   const curVal = currentSingles.get(key);
   if (curVal !== undefined && curVal !== defVal) {
     row(key, defVal, curVal, guessSource(key, configFile, themeKeys));
   } else if (showAll) {
     dimRow(key, defVal);
+  }
+}
+
+// ── config-file ──
+const defaultCFSet = new Set(defaultConfigFiles);
+for (const cf of currentConfigFiles) {
+  if (!defaultCFSet.has(cf)) {
+    row("config-file", "(none)", cf, "user");
+  } else if (showAll) {
+    dimRow("config-file", cf);
   }
 }
 
